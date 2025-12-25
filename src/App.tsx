@@ -6,7 +6,7 @@ function StylingSection() {
       
       {/* Colors */}
       <section>
-        <h2 className="text-h4 mb-6">Colors</h2>
+        <h2 className="mb-6 text-(length:--font-size-headline-2)">Colors</h2>
 
         <p className="text-sm text-brown-600 mb-4">Base</p>
         <div className="grid grid-cols-4 gap-4 mb-8">
@@ -44,13 +44,13 @@ function StylingSection() {
 
       {/* Typography */}
       <section>
-        <h2 className="text-h4 mb-6">Fonts</h2>
+        <h2 className="mb-6 text-(length:--font-size-headline-2)">Fonts</h2>
 
         <div className="space-y-4 text-brown-600">
-          <h1 className="text-h1">Headline 1</h1>
-          <h2 className="text-h2">Headline 2</h2>
-          <h3 className="text-h3">Headline 3</h3>
-          <h4 className="text-h4">Headline 4</h4>
+          <h1 className="text-(length:--font-size-headline-1)">Headline 1</h1>
+          <h2 className="text-(length:--font-size-headline-2)">Headline 2</h2>
+          <h3 className="text-(length:--font-size-headline-3)">Headline 3</h3>
+          <h4 className="text-(length:--font-size-headline-4)">Headline 4</h4>
 
           <p className="text-body">
             Body 1 – This is body text using Poppins.
