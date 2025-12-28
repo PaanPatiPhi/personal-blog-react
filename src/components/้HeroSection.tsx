@@ -1,4 +1,4 @@
-import hanniImage from "../assets/image/hanni_image.JPG";
+import hanniImage from "../assets/image/hanni_image.jpg";
 function HeroSection() {
   return (
       <section className="flex flex-col md:flex-row items-center md:justify-around py-10 px-2 md:px-30 md:py-15">
@@ -19,9 +19,7 @@ function HeroSection() {
           <div
             className="flex-none my-5
             relative overflow-hidden rounded-[2rem] shadow-2xl 
-                  /* จอเล็ก (Mobile): กำหนดขนาดให้พอดีจอ */
                   w-[343px] h-[400px] 
-                  /* จอใหญ่ (Desktop): เปลี่ยนเป็นขนาดที่คุณต้องการคงไว้ */
                   md:w-[400px] md:h-[530px]"
           >
             <img
