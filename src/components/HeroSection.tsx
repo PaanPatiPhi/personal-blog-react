@@ -1,4 +1,4 @@
-import hanniImage from "../assets/image/hanni_image.jpg";
+import CatImage from "../assets/image/Cat_punching.png";
 function HeroSection() {
   return (
       <section className="flex flex-col md:flex-row items-center md:justify-around py-10 px-2 md:px-auto md:py-15 md:max-w-[1217px] md:mx-auto ">
@@ -24,8 +24,8 @@ function HeroSection() {
           >
             <img
               className="w-full h-full object-cover"
-              src={hanniImage}
-              alt="Hanni??"
+              src={CatImage}
+              alt="Cat??"
             ></img>
           </div>
 
