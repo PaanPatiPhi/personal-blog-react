@@ -6,7 +6,7 @@ function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="w-full border-b border-brown-200 bg-white sticky top-0 z-50">
-      <div className="flex justify-between items-center px-6 md:px-50 py-4">
+      <div className="flex justify-between items-center px-6 md:mx-auto py-4 md:max-w-[1217px]">
         
         <h4 className="font-bold text-2xl">
           Patiparn T<span className="text-(--color-brand-green)">.</span>

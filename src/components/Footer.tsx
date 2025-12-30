@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="w-full bg-(--color-brown-200) h-[144px] md:h-[152px]">
       <Snowfall color="#f3e5d8" />
-      <div className="flex flex-col md:flex-row md:justify-between items-center md:py-15 md:px-30 px-4 py-10 ">
+      <div className="flex flex-col md:flex-row md:justify-between items-center md:py-15  py-10 mx-auto md:max-w-[1217px]">
         <div className="flex md:justify-between gap-6 justify-center items-center">
           <h1 className="text-(length:--text-size-headline-1) font-medium">
             Get in touch

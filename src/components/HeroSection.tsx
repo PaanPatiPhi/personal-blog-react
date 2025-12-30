@@ -1,10 +1,10 @@
 import hanniImage from "../assets/image/hanni_image.jpg";
 function HeroSection() {
   return (
-      <section className="flex flex-col md:flex-row items-center md:justify-around py-10 px-2 md:px-30 md:py-15">
+      <section className="flex flex-col md:flex-row items-center md:justify-around py-10 px-2 md:px-auto md:py-15 md:max-w-[1217px] md:mx-auto ">
 
         {/* Left content: headline and description */}
-        <div className="max-w-[343px] flex flex-col space-y-1.5 items-center md:items-end">
+        <div className="max-w-[343px] flex flex-col space-y-1.5 items-center md:items-end ">
           <h1 className="font-semibold md:text-(length:--font-size-headline-1) text-(length:--font-size-headline-2)">
             Stay Informed, <br />
             Stay Inspired

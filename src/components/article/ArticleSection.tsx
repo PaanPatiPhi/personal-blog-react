@@ -7,12 +7,13 @@ function ArticleSection() {
 
   return (
     <article>
-      <div className="p-4 gap-2.5 text-(--color-brown-400)  md:px-30 ">
-        <h3 className="text-(length:--font-size-headline-3) font-semibold text-left md:mx-20">
+      <div className="py-4 gap-2.5 text-(--color-brown-400)  md:mx-auto  w-[343px] mx-auto md:w-[1217px]">
+        <h3 className="text-(length:--font-size-headline-3) font-semibold text-left ">
           Latest articles
         </h3>
       </div>
-      <div className="flex flex-col md:flex-row-reverse md:justify-around justify-center items-center h-[172px] bg-(--color-brown-200) gap-4 md:w-[1200px] md:h-[80px] md:mx-50 md:mb-15">
+      <div className="flex flex-col md:flex-row-reverse md:justify-around justify-center items-center h-[172px] bg-(--color-brown-200) gap-4 
+      md:w-[1200px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl">
         <SearchBar className="w-[343px] bg-white" />
         <div>
           <p className="text-(--color-brown-400) font-medium text-left md:hidden flex">
