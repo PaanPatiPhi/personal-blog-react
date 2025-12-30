@@ -16,7 +16,7 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
 
   return (
     <div className={`relative max-w-sm ${className}`}>
-      <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+      <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none " />
 
       <Input
         type="search"
