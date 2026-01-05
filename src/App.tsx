@@ -1,8 +1,7 @@
 import './App.css'
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
-import ArticleSearchSection from './components/article/ArticleSearchSection';
-import ArticleSection from './components/article/ArticleSection';
+import ArticlePage from './components/article/ArticlePage';
 import Footer from './components/Footer';
 
 function App() {
@@ -10,8 +9,7 @@ function App() {
     <>
     <NavBar />
     <HeroSection />
-    <ArticleSearchSection />
-    <ArticleSection />
+    <ArticlePage />
     <Footer />
     </>
   );

@@ -27,7 +27,7 @@ function CategoryTabs({ options, activeValue, onChange, className = "" }: Catego
               : "bg-transparent text-(--color-brown-400) hover:bg-(--color-brown-100) hover:text-(--color-brown-500)"
           }`}
         >
-          {item.label}
+        {item.label}
         </button>
       ))}
     </div>
