@@ -5,11 +5,16 @@ import CategoryTabs from "./CategoryTabs";
 type ArticleSearchSectionProps = {
   category: string;
   onCategoryChange: (value: string) => void;
+  onSearch: (keyword: string) => void;
 };
+
+
+
 
 function ArticleSearchSection({
   category,
   onCategoryChange,
+    onSearch,
 }: ArticleSearchSectionProps) {
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
@@ -31,7 +36,8 @@ function ArticleSearchSection({
         h-[172px] bg-(--color-brown-200) gap-4
         md:w-[1217px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl"
       >
-        <SearchBar className="w-[343px] bg-white rounded-md" />
+        <SearchBar className="w-[343px] bg-white rounded-md"
+        onSearch={onSearch}  />
 
         {/* Mobile: Select */}
         <div className="md:hidden">

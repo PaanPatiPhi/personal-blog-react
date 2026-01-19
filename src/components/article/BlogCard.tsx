@@ -2,6 +2,7 @@ import DefaultAuthorImage from "../../assets/image/authors/ThomsanP.png";
 
 
 interface BlogCardProps {
+  id: number;
   image: string;
   category: string;
   title: string;
@@ -13,6 +14,7 @@ interface BlogCardProps {
 
 
 function BlogCard({ 
+  id,
   image, 
   category, 
   title, 
@@ -22,7 +24,7 @@ function BlogCard({
   date 
 }: BlogCardProps) {
   return (
-    <div className="flex flex-col gap-4 group cursor-pointer">
+    <div className="flex flex-col gap-4 group cursor-pointer" key={id}>
       <div className="overflow-hidden rounded-2xl aspect-[16/10]">
         <img 
           src={image} 
