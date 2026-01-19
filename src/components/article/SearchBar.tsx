@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/pages/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
 type SearchBarProps = {

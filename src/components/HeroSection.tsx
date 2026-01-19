@@ -1,4 +1,4 @@
-import CatImage from "../assets/image/hero/Cat_punching.png";
+import CatImage from "../assets/image/hero/cat_hero.jpeg";
 function HeroSection() {
   return (
       <section className="flex flex-col md:flex-row items-center md:justify-around py-10 px-2 md:px-auto md:py-15 md:max-w-[1217px] md:mx-auto ">
