@@ -26,11 +26,15 @@ function ViewPostPage() {
   const [post, setPost] = useState<Post | null>(location.state?.post ?? null);
   const [loading, setLoading] = useState(!post);
   const [error, setError] = useState(false);
-  const formattedDate = new Date(post.date).toLocaleDateString("en-GB", {
+
+if (!post) return null; // หรือ Loading / Error UI
+
+const formattedDate = new Date(post.date).toLocaleDateString("en-GB", {
   day: "2-digit",
   month: "long",
   year: "numeric",
-  });
+});
+
 
 
   useEffect(() => {
