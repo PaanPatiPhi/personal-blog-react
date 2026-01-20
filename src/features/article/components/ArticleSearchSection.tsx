@@ -1,7 +1,7 @@
 import SearchBar from "../../../shared/ui/SearchBar";
 import CategoriesSelector from "./CategoriesSelector";
 import CategoryTabs from "./CategoryTabs";
-import { useState } from "react";
+
 
 type ArticleSearchSectionProps = {
   category: string;

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import MainLayout from "./shared/layout/MainLayOut";
+import MainLayout from "./shared/layout/MainLayout";
 import ArticlePage from './features/article/components/ArticlePage';
 
 export default function AppRoutes() {

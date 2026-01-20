@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-export default function MainLayout() {
+function MainLayout() {
   return (
     <>
       <NavBar />
@@ -11,3 +11,5 @@ export default function MainLayout() {
     </>
   );
 }
+
+export default MainLayout
