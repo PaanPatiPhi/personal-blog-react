@@ -4,6 +4,7 @@ import ArticlesPage from "./features/article/components/ArticlePage";
 import ViewPostPage from "./features/viewpostpage/components/ViewPostPage";
 import "./index.css";
 import Snowfall from "react-snowfall";
+import Footer from "./shared/layout/Footer";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/posts/:id" element={<ViewPostPage />} />
         {/* อื่นๆ */}
       </Routes>
+      <Footer/ >
     </BrowserRouter>
   );
 }
