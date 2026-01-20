@@ -14,13 +14,13 @@ function ArticleSearchSection({
   onCategoryChange,
   onSearch,
 }: ArticleSearchSectionProps) {
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    setValue(v);
-    onSearch(v); // ส่ง string เท่านั้น
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const v = e.target.value;
+  //   setValue(v);
+  //   onSearch(v); // ส่ง string เท่านั้น
+  // };
 
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
