@@ -10,6 +10,10 @@ type ArticleSectionProps = {
 function ArticleSection({ category,keyword }: ArticleSectionProps) {
   const { blogData, isLoading, isError ,handleLoadMore, hasMore} = useGetPost({category, keyword});
 
+  // debug logs
+  console.log("ArticleSection keyword:", JSON.stringify(keyword));
+  console.log("ArticleSection blogData length:", blogData?.length);
+
   if (isLoading) {
     return (
       <div className="text-center py-20 text-gray-400">
@@ -26,10 +30,26 @@ function ArticleSection({ category,keyword }: ArticleSectionProps) {
     );
   }
 
-  const filteredBlogs =
+  // filter by category first
+  const categoryFiltered =
     category === "Highlight"
       ? blogData
       : blogData.filter((blog) => blog.category === category);
+
+  // client-side keyword filter (fallback if API search isn't applied)
+  const q = keyword?.trim().toLowerCase() ?? "";
+  const filteredBlogs = q
+    ? categoryFiltered.filter((blog) => {
+        const title = String(blog.title ?? "").toLowerCase();
+        const desc = String(blog.description ?? "").toLowerCase();
+        const cat = String(blog.category ?? "").toLowerCase();
+        return (
+          title.includes(q) ||
+          desc.includes(q) ||
+          cat.includes(q)
+        );
+      })
+    : categoryFiltered;
 
   return (
     <article>

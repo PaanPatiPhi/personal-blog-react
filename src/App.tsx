@@ -1,8 +1,8 @@
 import './App.css'
-import NavBar from "./components/NavBar";
-import HeroSection from "./components/HeroSection";
-import ArticlePage from './components/article/ArticlePage';
-import Footer from './components/Footer';
+import NavBar from "./shared/layout/NavBar";
+import HeroSection from "./shared/layout/HeroSection";
+import ArticlePage from './features/article/components/ArticlePage';
+import Footer from './shared/layout/Footer';
 
 function App() {
   return (

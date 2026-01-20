@@ -1,4 +1,4 @@
-import { Input } from "@/components/pages/input";
+import { Input } from "./input";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,9 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
   useEffect(() => {
     // debounce: รอ 400ms หลังจากหยุดพิมพ์
     const timer = setTimeout(() => {
-      onSearch?.(keyword.trim());
+      const value = keyword.trim();
+      console.log("SearchBar -> debounced value:", JSON.stringify(value));
+      onSearch?.(value);
     }, 400);
 
     return () => clearTimeout(timer);

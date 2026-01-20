@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import hamburgerIcon from '../assets/icon/hamburger_bar.png'; // แนะนำให้ import แบบนี้
+import hamburgerIcon from '../../assets/icon/hamburger_bar.png'; 
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,7 @@
-import SearchBar from "./SearchBar";
+import SearchBar from "../../../shared/ui/SearchBar";
 import CategoriesSelector from "./CategoriesSelector";
 import CategoryTabs from "./CategoryTabs";
+import { useState } from "react";
 
 type ArticleSearchSectionProps = {
   category: string;
@@ -8,14 +9,19 @@ type ArticleSearchSectionProps = {
   onSearch: (keyword: string) => void;
 };
 
-
-
-
 function ArticleSearchSection({
   category,
   onCategoryChange,
-    onSearch,
+  onSearch,
 }: ArticleSearchSectionProps) {
+  const [value, setValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+    setValue(v);
+    onSearch(v); // ส่ง string เท่านั้น
+  };
+
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
     { label: "Cat", value: "Cat" },
@@ -36,8 +42,10 @@ function ArticleSearchSection({
         h-[172px] bg-(--color-brown-200) gap-4
         md:w-[1217px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl"
       >
-        <SearchBar className="w-[343px] bg-white rounded-md"
-        onSearch={onSearch}  />
+        <SearchBar
+          className="w-[343px] bg-white rounded-md"
+          onSearch={onSearch}
+        />
 
         {/* Mobile: Select */}
         <div className="md:hidden">

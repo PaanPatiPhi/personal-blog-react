@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/pages/select"
+} from "../../../shared/ui/select"
 
 type Option = {
   label: string

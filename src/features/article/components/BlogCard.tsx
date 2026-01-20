@@ -1,4 +1,4 @@
-import DefaultAuthorImage from "../../assets/image/authors/ThomsanP.png";
+import DefaultAuthorImage from "../../../assets/image/authors/ThomsanP.png";
 
 
 interface BlogCardProps {
