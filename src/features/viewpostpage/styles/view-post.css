@@ -1,0 +1,35 @@
+.view-post-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ---------- Main ---------- */
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- Aside ---------- */
+.aside-column {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .view-post-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .aside-column {
+    position: static;
+    order: -1;
+    margin-bottom: 16px;
+  }
+}
