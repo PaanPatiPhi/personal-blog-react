@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import DefaultAuthorImage from "../../../assets/image/authors/ThomsanP.png";
 
 
@@ -23,8 +24,29 @@ function BlogCard({
   authorImage, 
   date 
 }: BlogCardProps) {
+  const navigate = useNavigate();
+
+  const handleOpen = () => {
+    // navigate ไปยังหน้า post พร้อมส่งข้อมูลผ่าน state เพื่อใช้ได้ทันที
+    navigate(`/posts/${id}`, {
+      state: {
+        post: { id, image, category, title, description, author, authorImage, date },
+      },
+    });
+  };
+
   return (
-    <div className="flex flex-col gap-4 group cursor-pointer" key={id}>
+    <div
+      className="flex flex-col gap-4 group cursor-pointer"
+      onClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") handleOpen();
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open post ${title}`}
+      key={id}
+    >
       <div className="overflow-hidden rounded-2xl aspect-[16/10]">
         <img 
           src={image} 
