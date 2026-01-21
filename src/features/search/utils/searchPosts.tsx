@@ -1,5 +1,6 @@
 import { Post } from "@/types/post";
 
+
 export function searchPosts(posts: Post[], keyword: string) {
   if (!keyword.trim()) return [];
 

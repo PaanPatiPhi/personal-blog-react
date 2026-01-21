@@ -10,6 +10,7 @@ type Blog = {
   author: string;
   authorImage: string;
   date: string;
+  content: string;
 };
 
 type UseGetPostParams = {

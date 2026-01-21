@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useGetPost from "@/features/article/hook/useGetPost";
 import { Search } from "lucide-react";
 
 type SearchBarProps = {
   className?: string;
+  category: string; // required now
+  onSearch?: (keyword: string) => void;
 };
 
-function SearchBar({className}: SearchBarProps) {
+function SearchBar({ className, category, onSearch }: SearchBarProps) {
   const navigate = useNavigate();
-  const { blogData = [] } = useGetPost({});
   const [query, setQuery] = useState("");
+
+  // ถ้ามีการพิมพ์ ให้ดึงจากทุก category (category = "") เพื่อให้ผลการค้นหาไม่ถูกกรองตาม category
+  const fetchCategory = query.trim().length > 0 ? "" : category;
+  const { blogData = [] } = useGetPost({ category: fetchCategory, keyword: "" });
+
+  // optional: propagate debounced search back to parent
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const v = query.trim();
+      onSearch?.(v);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [query, onSearch]);
 
   const q = query.toLowerCase();
 
@@ -19,13 +33,8 @@ function SearchBar({className}: SearchBarProps) {
       ? blogData.filter((blog) => {
           const title = blog.title?.toLowerCase() ?? "";
           const desc = blog.description?.toLowerCase() ?? "";
-          const content = blog.content?.toLowerCase() ?? "";
 
-          return (
-            title.includes(q) ||
-            desc.includes(q) ||
-            content.includes(q)
-          );
+          return title.includes(q) || desc.includes(q);
         })
       : [];
 
@@ -47,7 +56,7 @@ function SearchBar({className}: SearchBarProps) {
               key={blog.id}
               className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                navigate(`/posts/${blog.id}`);
+                navigate(`/posts/${blog.id}`, { state: { post: blog } });
                 setQuery("");
               }}
             >

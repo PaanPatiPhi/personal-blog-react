@@ -10,6 +10,7 @@ type ArticleSearchSectionProps = {
 function ArticleSearchSection({
   category,
   onCategoryChange,
+  onSearch,
 }: ArticleSearchSectionProps) {
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
@@ -31,6 +32,7 @@ function ArticleSearchSection({
       >
         <SearchBar
           className="w-[343px] bg-white rounded-md"
+          category={category}      // pass category so SearchBar can query correct posts
         />
 
         {/* Mobile */}

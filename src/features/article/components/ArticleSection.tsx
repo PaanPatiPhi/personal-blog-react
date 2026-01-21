@@ -3,7 +3,6 @@ import useGetPost from "../hook/useGetPost";
 
 type ArticleSectionProps = {
   category: string;
-  keyword: string;
 };
 
 
