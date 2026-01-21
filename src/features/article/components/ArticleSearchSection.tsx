@@ -1,17 +1,15 @@
-import SearchBar from "../../search/components/SearchBar";
+import SearchBar from "@/features/search/components/SearchBar";
 import CategoriesSelector from "./CategoriesSelector";
 import CategoryTabs from "./CategoryTabs";
 
 type ArticleSearchSectionProps = {
   category: string;
   onCategoryChange: (value: string) => void;
-  onSearch?: (keyword: string) => void;
 };
 
 function ArticleSearchSection({
   category,
   onCategoryChange,
-  onSearch,
 }: ArticleSearchSectionProps) {
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
@@ -28,29 +26,30 @@ function ArticleSearchSection({
 
       <div
         className="flex flex-col md:flex-row-reverse md:justify-around justify-center items-center
-        h-[172px] bg-(--color-brown-200) gap-4
+        h-[172px] gap-4
         md:w-[1217px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl"
       >
         <SearchBar
           className="w-[343px] bg-white rounded-md"
           category={category}
-          onSearch={onSearch}
         />
 
-        {/* Mobile */}
+        {/* Mobile: Select */}
         <div className="md:hidden">
-          <p className="font-medium mb-1">Category</p>
+          <p className="text-(--color-brown-400) font-medium text-left">
+            Category
+          </p>
           <CategoriesSelector
-            className="w-[343px]  border-(--color-brown-200) bg-white text- text-(--color-brown-400)"
+            className="w-[343px] text-(--color-brown-400) bg-white"
             value={category}
             onChange={onCategoryChange}
             options={categoryOptions}
           />
         </div>
 
-        {/* Desktop */}
+        {/* Desktop: Tabs */}
         <CategoryTabs
-          className="hidden md:flex w-[438px]"
+          className="hidden md:flex justify-between w-[438px]"
           options={categoryOptions}
           activeValue={category}
           onChange={onCategoryChange}

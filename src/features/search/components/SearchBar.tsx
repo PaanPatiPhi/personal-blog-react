@@ -5,35 +5,31 @@ import { Search } from "lucide-react";
 
 type SearchBarProps = {
   className?: string;
-  category: string; // required now
-  onSearch?: (keyword: string) => void;
+  category: string; // required
 };
 
-function SearchBar({ className, category, onSearch }: SearchBarProps) {
+function SearchBar({ className, category }: SearchBarProps) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  // ถ้ามีการพิมพ์ ให้ดึงจากทุก category (category = "") เพื่อให้ผลการค้นหาไม่ถูกกรองตาม category
+  // ถ้ามีการพิมพ์ ให้ดึงจากทุก category เพื่อไม่ให้ถูกกรองตาม category ปัจจุบัน
   const fetchCategory = query.trim().length > 0 ? "" : category;
   const { blogData = [] } = useGetPost({ category: fetchCategory, keyword: "" });
 
-  // optional: propagate debounced search back to parent
+  // debounce local query for suggestions (UI only)
+  const [debounced, setDebounced] = useState(query);
   useEffect(() => {
-    const t = setTimeout(() => {
-      const v = query.trim();
-      onSearch?.(v);
-    }, 300);
+    const t = setTimeout(() => setDebounced(query.trim()), 250);
     return () => clearTimeout(t);
-  }, [query, onSearch]);
+  }, [query]);
 
-  const q = query.toLowerCase();
+  const q = debounced.toLowerCase();
 
   const results =
     q.length > 0
       ? blogData.filter((blog) => {
           const title = blog.title?.toLowerCase() ?? "";
           const desc = blog.description?.toLowerCase() ?? "";
-
           return title.includes(q) || desc.includes(q);
         })
       : [];
@@ -46,7 +42,7 @@ function SearchBar({ className, category, onSearch }: SearchBarProps) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search"
-        className="w-full py-2 px-3  border-1 border-(--color-brown-200) rounded-lg"
+        className="w-full py-2 px-3 border rounded-lg"
       />
 
       {results.length > 0 && (
@@ -56,6 +52,7 @@ function SearchBar({ className, category, onSearch }: SearchBarProps) {
               key={blog.id}
               className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
+                // navigate ไปหน้า ViewPostPage พร้อมส่ง state ของ post
                 navigate(`/posts/${blog.id}`, { state: { post: blog } });
                 setQuery("");
               }}
