@@ -23,18 +23,18 @@ function PostActions({
   onShareTwitter,
 }: PostActionsProps) {
   return (
-    <div className="flex flex-col gap-4 mt-6 -mx-4 bg-(--color-brown-200) w-[375px]">
+    <div className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-0 mt-6 -mx-4 md:mx-auto bg-(--color-brown-200) w-[375px] md:w-full md:rounded-[16px]">
       <button
         onClick={onLike}
-        className="flex items-center gap-2 text-sm mx-auto my-5 bg-white w-[343px] h-[48px] rounded-[999px] justify-center border-border border-1"
+        className="flex items-center gap-2 text-sm mx-auto md:ml-10 my-5 bg-white w-[343px] md:w-[135px] h-[48px] rounded-[999px] justify-center border-(--color-brown-400) border-1"
       >
         <SmileIcon />
         <span>{likes}</span>
       </button>
-    <div className="flex justify-around mb-5">
+    <div className="flex justify-around mb-5 md:my-5 md:gap-5 md:mr-10">
       <button
         onClick={onCopyLink}
-        className="flex items-center gap-2 text-sm  bg-white w-[161px] h-[48px] rounded-[999px] justify-center border-border border-1"
+        className="flex items-center gap-2 text-sm  bg-white w-[161px] h-[48px] rounded-[999px] justify-center border-(--color-brown-400) border-1"
       >
         <Copy /> 
         <span>Copy link</span>

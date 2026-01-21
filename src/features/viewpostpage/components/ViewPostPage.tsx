@@ -5,8 +5,10 @@ import axios from "axios";
 import PostContent from "./PostContent";
 import AuthorCard from "./AuthorCard";
 import PostActions from "./PostActions";
-// import CommentInput from "./CommentInput";
-// import CommentSection from "./CommentSection";
+import CommentInput from "./CommentInput";
+import CommentSection from "./CommentSection";
+
+import mockComments from "../data/mockComments";
 
 type Post = {
   id: number;
@@ -21,6 +23,14 @@ type Post = {
   likes: number;
 };
 
+type Comment = {
+  id: number;
+  image: string;
+  name: string;
+  date: string;
+  comment: string;
+};
+
 function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
@@ -29,6 +39,8 @@ function ViewPostPage() {
   const [post, setPost] = useState<Post | null>(location.state?.post ?? null);
   const [loading, setLoading] = useState(!post);
   const [error, setError] = useState(false);
+
+  const [comments, setComments] = useState<Comment[]>(mockComments);
 
   useEffect(() => {
     if (!id) return;
@@ -70,11 +82,11 @@ function ViewPostPage() {
     );
   }
 
-  const formattedDate = new Date(post.date).toLocaleDateString("en-GB", {
+  const formattedDate = new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
     month: "long",
     year: "numeric",
-  });
+  }).format(new Date(post.date));
 
   const handleLike = () => {
     navigate("/login", { state: { from: location.pathname } });
@@ -91,24 +103,24 @@ function ViewPostPage() {
       "_blank"
     );
   };
+
   const handleShareLinkedIn = () => {
-  const url = encodeURIComponent(window.location.href);
+    const url = encodeURIComponent(window.location.href);
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      "_blank"
+    );
+  };
 
-  window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-    "_blank"
-  );
-};
-const handleShareTwitter = () => {
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent(document.title); // หรือ post.title
+  const handleShareTwitter = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(post.title);
 
-  window.open(
-    `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-    "_blank"
-  );
-};
-
+    window.open(
+      `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      "_blank"
+    );
+  };
 
   return (
     <>
@@ -116,11 +128,11 @@ const handleShareTwitter = () => {
       <img
         src={post.image}
         alt={post.title}
-        className="w-full h-[184px] md:h-[585px] object-cover"
+        className="w-full h-[184px] md:h-[585px] md:max-w-[1200px] mx-auto object-cover"
       />
 
-      <main className="max-w-[1200px] mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
+      <main className="max-w-[1200px] mx-auto px-4 py-6 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_305px] gap-10">
           
           {/* MAIN COLUMN */}
           <div className="flex flex-col gap-8">
@@ -136,7 +148,7 @@ const handleShareTwitter = () => {
               <h1 className="text-[28px] font-semibold mt-4">
                 {post.title}
               </h1>
-              <p>
+              <p className="text-gray-600 mt-2">
                 {post.description}
               </p>
             </div>
@@ -161,12 +173,34 @@ const handleShareTwitter = () => {
               onShareTwitter={handleShareTwitter}
             />
 
-            {/* Future */}
-            {/* <CommentInput /> */}
-            {/* <CommentSection /> */}
+            <CommentInput
+              onSubmit={(text) => {
+                const newComment: Comment = {
+                  id: Date.now(),
+                  image: "/avatar.png",
+                  name: "Guest",
+                  date: new Date().toISOString(),
+                  comment: text,
+                };
+
+                setComments((prev) => [newComment, ...prev]);
+              }}
+            />
+
+            <div className="flex flex-col gap-6">
+              {comments.map((comment) => (
+                <CommentSection
+                  key={comment.id}
+                  image={comment.image}
+                  name={comment.name}
+                  date={comment.date}
+                  comment={comment.comment}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* ASIDE (Desktop only) */}
+          {/* ASIDE (Desktop) */}
           <aside className="hidden lg:block sticky top-24 self-start">
             <AuthorCard
               name={post.author}
