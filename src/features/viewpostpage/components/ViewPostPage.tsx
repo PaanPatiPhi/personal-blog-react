@@ -17,7 +17,7 @@ import { useComments } from "../hooks/useComments";
 function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const navigate = useNavigate();
+
 
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -58,7 +58,15 @@ function ViewPostPage() {
               <AuthorCard name={post.author} image={post.authorImage} bio="I am a pet enthusiast and freelance writer who specializes in animal behavior and care." />
             </div>
 
-            <PostActions {...actions} likes={post.likes} />
+            <PostActions
+            likes={post.likes}
+            onLike={actions.handleLike}
+            onCopyLink={actions.handleCopyLink}
+            onShareFacebook={actions.handleShareFacebook}
+            onShareLinkedIn={actions.handleShareLinkedIn}
+            onShareTwitter={actions.handleShareTwitter}
+            />
+
 
             <CommentInput onSubmit={addComment} />
 
