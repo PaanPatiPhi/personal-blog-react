@@ -7,6 +7,7 @@ import AuthorCard from "./AuthorCard";
 import PostActions from "./PostActions";
 import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
+import LoginModal from "./LoginModal";
 
 import mockComments from "../data/mockComments";
 
@@ -35,6 +36,8 @@ function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
 
   const [post, setPost] = useState<Post | null>(location.state?.post ?? null);
   const [loading, setLoading] = useState(!post);
@@ -88,9 +91,10 @@ function ViewPostPage() {
     year: "numeric",
   }).format(new Date(post.date));
 
-  const handleLike = () => {
-    navigate("/login", { state: { from: location.pathname } });
-  };
+const handleLike = () => {
+  setShowLoginModal(true);
+};
+
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -210,6 +214,11 @@ function ViewPostPage() {
           </aside>
         </div>
       </main>
+      <LoginModal
+  open={showLoginModal}
+  onClose={() => setShowLoginModal(false)}
+/>
+
     </>
   );
 }
