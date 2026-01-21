@@ -7,7 +7,7 @@ import AuthorCard from "./AuthorCard";
 import PostActions from "./PostActions";
 import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
-import LoginModal from "./LoginModal";
+import LoginModal from "../../auth/LoginModal";
 
 import mockComments from "../data/mockComments";
 

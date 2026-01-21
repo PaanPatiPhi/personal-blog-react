@@ -1,10 +1,24 @@
+import { useNavigate } from "react-router-dom";
+
 type LoginModalProps = {
   open: boolean;
   onClose: () => void;
 };
 
 function LoginModal({ open, onClose }: LoginModalProps) {
+  const navigate = useNavigate();
+
   if (!open) return null;
+
+  const goToSignup = () => {
+    onClose();
+    navigate("/signup");
+  };
+
+  const goToLogin = () => {
+    onClose();
+    navigate("/login");
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -27,15 +41,21 @@ function LoginModal({ open, onClose }: LoginModalProps) {
           Create an account to continue
         </h2>
 
-        <button className="w-full bg-black text-white rounded-full py-3 mb-4">
+        <button
+          onClick={goToSignup}
+          className="w-full bg-black text-white rounded-full py-3 mb-4"
+        >
           Create account
         </button>
 
         <p className="text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <span className="underline cursor-pointer">
+          <button
+            onClick={goToLogin}
+            className="underline"
+          >
             Log in
-          </span>
+          </button>
         </p>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import hamburgerIcon from "../../assets/icon/hamburger_bar.png";
 
 function NavBar() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="w-full border-b border-brown-200 bg-white sticky top-0 z-50">
@@ -27,7 +29,8 @@ function NavBar() {
               <button className="w-full h-[48px] border-solid rounded-full border-black border-1 block">
                 Log In
               </button>
-              <button className="w-full h-[48px] border-solid rounded-full border-1 bg-black text-white block">
+              <button className="w-full h-[48px] border-solid rounded-full border-1 bg-black text-white block"
+              onClick={()=>navigate("/signup")}>
                 Sign Up
               </button>
             </div>
@@ -36,7 +39,8 @@ function NavBar() {
           <button className="w-[127px] h-[48px] border-solid rounded-full border-black border-1 md:block hidden">
             Log In
           </button>
-          <button className="w-[127px] h-[48px] border-solid rounded-full border-1 bg-black text-white md:inline hidden">
+          <button className="w-[127px] h-[48px] border-solid rounded-full border-1 bg-black text-white md:inline hidden"
+          onClick={()=>navigate("/signup")}>
             Sign Up
           </button>
         </div>
