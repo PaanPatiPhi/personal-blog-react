@@ -33,7 +33,7 @@ function CategoriesSelector({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent position="popper" sideOffset={4}>
+      <SelectContent position="popper" sideOffset={4} className="border-(--color-brown-200) bg-white text- text-(--color-brown-400)">
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

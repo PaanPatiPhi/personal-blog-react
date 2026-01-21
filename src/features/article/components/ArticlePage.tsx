@@ -5,23 +5,24 @@ import HeroSection from "@/shared/layout/HeroSection";
 
 function ArticlesPage() {
   const [category, setCategory] = useState("Highlight");
-  const [keyword, setKeyword] = useState("");
+
 
   return (
     <>
-      <HeroSection/>
+      <HeroSection />
+
       <ArticleSearchSection
         category={category}
         onCategoryChange={setCategory}
-        onSearch={setKeyword}
+
       />
 
-      <ArticleSection 
-      category={category}
-      keyword={keyword} />
+      <ArticleSection
+        category={category}
+
+      />
     </>
   );
 }
 
 export default ArticlesPage;
-

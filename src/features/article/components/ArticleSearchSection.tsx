@@ -1,27 +1,16 @@
-import SearchBar from "../../../shared/ui/SearchBar";
+import SearchBar from "../../search/components/SearchBar";
 import CategoriesSelector from "./CategoriesSelector";
 import CategoryTabs from "./CategoryTabs";
-
 
 type ArticleSearchSectionProps = {
   category: string;
   onCategoryChange: (value: string) => void;
-  onSearch: (keyword: string) => void;
 };
 
 function ArticleSearchSection({
   category,
   onCategoryChange,
-  onSearch,
 }: ArticleSearchSectionProps) {
-  // const [value, setValue] = useState("");
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const v = e.target.value;
-  //   setValue(v);
-  //   onSearch(v); // ส่ง string เท่านั้น
-  // };
-
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
     { label: "Cat", value: "Cat" },
@@ -31,10 +20,8 @@ function ArticleSearchSection({
 
   return (
     <article>
-      <div className="py-4 gap-2.5 text-(--color-brown-400) md:mx-auto w-[343px] mx-auto md:w-[1217px]">
-        <h3 className="text-(length:--font-size-headline-3) font-semibold text-left">
-          Latest articles
-        </h3>
+      <div className="py-4 md:mx-auto w-[343px] md:w-[1217px]">
+        <h3 className="text-xl font-semibold">Latest articles</h3>
       </div>
 
       <div
@@ -44,25 +31,22 @@ function ArticleSearchSection({
       >
         <SearchBar
           className="w-[343px] bg-white rounded-md"
-          onSearch={onSearch}
         />
 
-        {/* Mobile: Select */}
+        {/* Mobile */}
         <div className="md:hidden">
-          <p className="text-(--color-brown-400) font-medium text-left">
-            Category
-          </p>
+          <p className="font-medium mb-1">Category</p>
           <CategoriesSelector
-            className="w-[343px] text-(--color-brown-400) bg-white"
+            className="w-[343px]  border-(--color-brown-200) bg-white text- text-(--color-brown-400)"
             value={category}
             onChange={onCategoryChange}
             options={categoryOptions}
           />
         </div>
 
-        {/* Desktop: Tabs */}
+        {/* Desktop */}
         <CategoryTabs
-          className="hidden md:flex justify-between w-[438px]"
+          className="hidden md:flex w-[438px]"
           options={categoryOptions}
           activeValue={category}
           onChange={onCategoryChange}
