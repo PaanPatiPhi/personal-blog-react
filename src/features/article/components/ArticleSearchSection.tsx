@@ -27,7 +27,7 @@ function ArticleSearchSection({
       <div
         className="flex flex-col md:flex-row-reverse md:justify-around justify-center items-center
         h-[172px] gap-4
-        md:w-[1217px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl"
+        md:w-[1217px] md:h-[80px] md:mx-auto md:mb-15 md:rounded-2xl bg-(--color-brown-200)"
       >
         <SearchBar
           className="w-[343px] bg-white rounded-md"
