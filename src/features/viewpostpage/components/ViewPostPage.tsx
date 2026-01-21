@@ -128,7 +128,7 @@ function ViewPostPage() {
       <img
         src={post.image}
         alt={post.title}
-        className="w-full h-[184px] md:h-[585px] md:max-w-[1200px] mx-auto object-cover"
+        className="w-full h-[184px] md:h-[585px] md:max-w-[1200px] mx-auto object-cover rounded-2xl"
       />
 
       <main className="max-w-[1200px] mx-auto px-4 py-6 md:px-0">
