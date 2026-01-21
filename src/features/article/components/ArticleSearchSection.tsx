@@ -5,6 +5,7 @@ import CategoryTabs from "./CategoryTabs";
 type ArticleSearchSectionProps = {
   category: string;
   onCategoryChange: (value: string) => void;
+  onSearch?: (keyword: string) => void;
 };
 
 function ArticleSearchSection({
@@ -32,7 +33,8 @@ function ArticleSearchSection({
       >
         <SearchBar
           className="w-[343px] bg-white rounded-md"
-          category={category}      // pass category so SearchBar can query correct posts
+          category={category}
+          onSearch={onSearch}
         />
 
         {/* Mobile */}

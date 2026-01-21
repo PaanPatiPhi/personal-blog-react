@@ -5,7 +5,7 @@ import HeroSection from "@/shared/layout/HeroSection";
 
 function ArticlesPage() {
   const [category, setCategory] = useState("Highlight");
-  const [keyword, setKeyword] = useState(""); // added
+  const [keyword, setKeyword] = useState("");
 
   return (
     <>
@@ -14,12 +14,12 @@ function ArticlesPage() {
       <ArticleSearchSection
         category={category}
         onCategoryChange={setCategory}
-        onSearch={setKeyword} // pass search handler
+        onSearch={(k: string) => setKeyword(k)} // wrapper to satisfy types
       />
 
       <ArticleSection
         category={category}
-        keyword={keyword} // pass keyword
+        keyword={keyword}
       />
     </>
   );
