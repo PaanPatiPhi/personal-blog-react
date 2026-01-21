@@ -8,6 +8,7 @@ import PostActions from "./PostActions";
 import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
 import LoginModal from "../../auth/LoginModal";
+import { useAuth } from "@/features/auth/context/AuthContext";
 
 import mockComments from "../data/mockComments";
 
@@ -37,7 +38,7 @@ function ViewPostPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  const { user } = useAuth();
 
   const [post, setPost] = useState<Post | null>(location.state?.post ?? null);
   const [loading, setLoading] = useState(!post);
@@ -91,7 +92,11 @@ function ViewPostPage() {
     year: "numeric",
   }).format(new Date(post.date));
 
+
 const handleLike = () => {
+  if (!user) {
+    return;
+  }
   setShowLoginModal(true);
 };
 
