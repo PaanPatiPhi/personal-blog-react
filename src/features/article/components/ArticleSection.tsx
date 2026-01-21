@@ -3,15 +3,15 @@ import useGetPost from "../hook/useGetPost";
 
 type ArticleSectionProps = {
   category: string;
-  keyword?: string;
+  keyword?: string; // ยังคงรับได้แต่จะไม่ถูกใช้ที่นี่
 };
 
-function ArticleSection({ category, keyword = "" }: ArticleSectionProps) {
+function ArticleSection({ category }: ArticleSectionProps) {
   const { blogData, isLoading, isError, handleLoadMore, hasMore } =
-    useGetPost({ category, keyword });
+    useGetPost({ category, keyword: "" }); // ส่ง keyword เป็น empty ให้ API (search ไม่ใช้ที่นี่)
 
-  // debug logs (เอาออกได้ถ้าไม่ต้องการ)
-  console.log("ArticleSection keyword:", JSON.stringify(keyword));
+  // debug logs (เอาออกได้ถ้าต้องการ)
+  console.log("ArticleSection category:", category);
   console.log("ArticleSection blogData length:", blogData?.length);
 
   if (isLoading && (!blogData || blogData.length === 0)) {
@@ -22,20 +22,9 @@ function ArticleSection({ category, keyword = "" }: ArticleSectionProps) {
     return <div className="py-20 text-center text-red-500">Failed to load articles</div>;
   }
 
-  // filter by category first (if category !== Highlight)
-  const categoryFiltered =
+  // filter by category only (Highlight => all)
+  const filteredBlogs =
     category === "Highlight" ? blogData : blogData.filter((b) => b.category === category);
-
-  // client-side keyword filter (fallback if API search isn't applied)
-  const q = keyword?.trim().toLowerCase() ?? "";
-  const filteredBlogs = q
-    ? categoryFiltered.filter((blog) => {
-        const title = String(blog.title ?? "").toLowerCase();
-        const desc = String(blog.description ?? "").toLowerCase();
-        const cat = String(blog.category ?? "").toLowerCase();
-        return title.includes(q) || desc.includes(q) || cat.includes(q);
-      })
-    : categoryFiltered;
 
   return (
     <article>
