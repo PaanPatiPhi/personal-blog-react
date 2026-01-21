@@ -1,4 +1,4 @@
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation} from "react-router-dom";
 import { useState } from "react";
 
 import PostContent from "./PostContent";
