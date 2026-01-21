@@ -1,16 +1,15 @@
 
 type CommentSectionProps = {
-    key:number;
-    id: number;
-    image: string;
-    name: string;
-    date: string;
-    comment: string;
-}
+  image: string;
+  name: string;
+  date: string;
+  comment: string;
+};
 
 
 
-function CommentSection({key, image, name, date, comment} : CommentSectionProps){
+
+function CommentSection({ image, name, date, comment} : CommentSectionProps){
     const newDate = new Date(date);
 
 const formattedDate = new Intl.DateTimeFormat("en-GB", {
@@ -27,7 +26,7 @@ const formattedDate = new Intl.DateTimeFormat("en-GB", {
     return(
         <>
         <div
-        className="w-[343px] md:w-full flex-col pb-4 border-b-1 border-(--color-brown-300)" key={key}>
+        className="w-[343px] md:w-full flex-col pb-4 border-b-1 border-(--color-brown-300)" >
             <div className="flex gap-5">
             <img
             src={image}
