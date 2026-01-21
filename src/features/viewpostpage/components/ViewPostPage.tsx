@@ -8,6 +8,8 @@ import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
 import LoginModal from "../../auth/LoginModal";
 import PostMeta from "./PostMeta";
+import CopySuccessToast from "@/shared/components/CopySuccessToast";
+
 
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { usePost } from "../hooks/usePost";
@@ -21,12 +23,24 @@ function ViewPostPage() {
 
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCopyToast, setShowCopyToast] = useState(false);
+
 
   const { post, loading, error } = usePost(id, location.state?.post);
   const { comments, addComment } = useComments();
 
   if (loading) return <div className="py-20 text-center">Loading...</div>;
   if (error || !post) return <div>Error loading post</div>;
+
+  const handleCopyLink = async () => {
+  await navigator.clipboard.writeText(window.location.href);
+  setShowCopyToast(true);
+
+  setTimeout(() => {
+    setShowCopyToast(false);
+  }, 2000);
+};
+
 
   const actions = usePostActions({
     isLoggedIn: !!user,
@@ -61,12 +75,12 @@ function ViewPostPage() {
             <PostActions
             likes={post.likes}
             onLike={actions.handleLike}
-            onCopyLink={actions.handleCopyLink}
+            onCopyLink={handleCopyLink}
             onShareFacebook={actions.handleShareFacebook}
             onShareLinkedIn={actions.handleShareLinkedIn}
             onShareTwitter={actions.handleShareTwitter}
             />
-
+          
 
             <CommentInput onSubmit={addComment} />
 
@@ -85,6 +99,8 @@ function ViewPostPage() {
         open={showLoginModal}
         onClose={() => setShowLoginModal(false)}
       />
+      <CopySuccessToast show={showCopyToast} />
+
     </>
   );
 }
