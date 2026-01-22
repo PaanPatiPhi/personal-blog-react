@@ -27,11 +27,15 @@ function NavBar() {
           {isOpen && (
             <div className="absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-lg animate-in slide-in-from-top duration-300 space-y-6 px-6 py-4 border-t md:hidden">
               <button className="w-full h-[48px] border-solid rounded-full border-black border-1 block"
-              onClick={()=>navigate("/login")}>
+              onClick={()=>{navigate("/login");
+                setIsOpen(!isOpen);
+              }}>
                 Log In
               </button>
               <button className="w-full h-[48px] border-solid rounded-full border-1 bg-black text-white block"
-              onClick={()=>navigate("/signup")}>
+              onClick={()=>{navigate("/signup");
+                setIsOpen(!isOpen);
+              }}>
                 Sign Up
               </button>
             </div>
