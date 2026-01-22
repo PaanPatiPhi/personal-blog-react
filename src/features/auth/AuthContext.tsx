@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   // mock login: accept any credentials, persist to localStorage
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, _password: string) => {
     // simulate network delay
     await new Promise((r) => setTimeout(r, 500));
     const mockUser: User = {
