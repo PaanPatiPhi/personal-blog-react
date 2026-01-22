@@ -1,4 +1,6 @@
 import { useState } from "react";
+import SignupSuccess from "./SignupSuccess";
+import { useNavigate } from "react-router-dom";
 
 type SignupFormValues = {
   name: string;
@@ -24,6 +26,9 @@ function SignupForm({ onSuccess }: SignupFormProps) {
   const [errors, setErrors] = useState<SignupFormErrors>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [registered, setRegistered] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -71,11 +76,24 @@ function SignupForm({ onSuccess }: SignupFormProps) {
       console.log("signup payload:", form);
       await new Promise((res) => setTimeout(res, 800));
 
-      onSuccess?.();
+      // persist mock user for demo
+      const mockUser = {
+        id: Date.now(),
+        name: form.name,
+        email: form.email,
+        username: form.username,
+      };
+      localStorage.setItem("mock_user", JSON.stringify(mockUser));
+
+      setRegistered(true);
     } finally {
       setLoading(false);
     }
   };
+
+  if (registered) {
+    return <SignupSuccess onContinue={onSuccess ? onSuccess : () => navigate("/")} />;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -89,9 +107,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
           placeholder="Full name"
           className="w-full rounded-xl border px-4 py-3"
         />
-        {errors.name && (
-          <p className="text-sm text-red-500 mt-1">{errors.name}</p>
-        )}
+        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
       </div>
 
       {/* Username */}
@@ -104,9 +120,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
           placeholder="Username"
           className="w-full rounded-xl border px-4 py-3"
         />
-        {errors.username && (
-          <p className="text-sm text-red-500 mt-1">{errors.username}</p>
-        )}
+        {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
       </div>
 
       {/* Email */}
@@ -120,9 +134,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
           placeholder="Email"
           className="w-full rounded-xl border px-4 py-3"
         />
-        {errors.email && (
-          <p className="text-sm text-red-500 mt-1">{errors.email}</p>
-        )}
+        {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
       </div>
 
       {/* Password */}
@@ -148,9 +160,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
           </button>
         </div>
 
-        {errors.password && (
-          <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-        )}
+        {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
       </div>
 
       <button
@@ -160,6 +170,19 @@ function SignupForm({ onSuccess }: SignupFormProps) {
       >
         {loading ? "Signing up..." : "Sign up"}
       </button>
+
+      {!registered && (
+        <div className="text-center mt-4">
+          <span className="text-sm text-gray-600">Already have an account? </span>
+          <button
+            type="button"
+            onClick={() => navigate("/login")}
+            className="text-sm font-medium text-black underline ml-1"
+          >
+            Login
+          </button>
+        </div>
+      )}
     </form>
   );
 }
