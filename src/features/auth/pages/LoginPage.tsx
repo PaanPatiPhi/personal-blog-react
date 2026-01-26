@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 
 function LoginPage() {
@@ -8,7 +9,6 @@ function LoginPage() {
     const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
 
@@ -33,18 +33,22 @@ function LoginPage() {
     const success = login(email, password);
 
     if (!success) {
-    setError("Invalid email or password");
+    toast.error("Invalid email or password");
     return;
   }
 
-  navigate("/");
+  toast.success("Login successful");
+
+  setTimeout(() => {
+    navigate("/");
+  }, 1000);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-(--color-brown-100)">
+    <div className="min-h-screen flex items-center justify-center ">
       <form
         onSubmit={handleSubmit}
-        className="w-[343px] bg-(--color-brown-200) rounded-2xl p-6"
+        className="w-[343px] bg-(--color-brown-100) rounded-2xl p-6"
       >
         <h1 className="text-2xl font-semibold text-center mb-6">
           Log in
@@ -64,19 +68,12 @@ function LoginPage() {
         <label className="block text-sm mb-1">Password</label>
         <div className="relative mb-4">
           <input
-            type={showPassword ? "text" : "password"}
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full px-4 py-3 rounded-xl border pr-12"
+            className="w-full px-4 py-3 rounded-xl border "
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500"
-          >
-            {showPassword ? "🙈" : "👁"}
-          </button>
         </div>
 
         {/* Error */}

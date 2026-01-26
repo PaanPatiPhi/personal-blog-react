@@ -2,6 +2,8 @@ import Snowfall from "react-snowfall";
 import { Linkedin } from "lucide-react";
 import { Github } from 'lucide-react';
 import { Mail } from 'lucide-react';
+import { Link } from "react-router-dom";
+
 
 function Footer() {
   return (
@@ -23,9 +25,10 @@ function Footer() {
           </button>
           </div>
         <button>
-        <h1 className="text-(length:--text-size-headline-1) font-medium">
+          <Link to="/" className="text-(length:--text-size-headline-1) font-medium">
           Homepage
-        </h1>
+        </Link>
+
         </button>
       </div>
     </footer>

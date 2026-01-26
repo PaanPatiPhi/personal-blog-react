@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { AuthProvider } from "@/features/auth/AuthContext";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
 import LoginModal from "@/features/auth/components/LoginModal";
 import "./index.css";
 

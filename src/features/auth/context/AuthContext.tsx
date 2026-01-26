@@ -1,49 +1,82 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { mockUser } from "../../../mock/mockuser";
+import { createContext, useContext, useEffect, useState } from "react";
+import { mockLogin } from "../../../mock/mockAuthService";
+
+export type User = {
+  name: string;
+  email: string;
+  image?: string;
+};
 
 type AuthContextType = {
-  user: { name: string; email: string } | null;
-  login: (email: string, password: string) => boolean;
+  user: User | null;
+  isAuthenticated: boolean;
+
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+
+  loginModalOpen: boolean;
+  openLoginModal: () => void;
+  closeLoginModal: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthContextType["user"]>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
+  const isAuthenticated = !!user;
+
+  // ✅ โหลด user จาก localStorage (ปลอดภัยขึ้น)
   useEffect(() => {
-    const saved = localStorage.getItem("mock_user");
-    if (saved) setUser(JSON.parse(saved));
+    try {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser) as User);
+      }
+    } catch {
+      localStorage.removeItem("user");
+    }
   }, []);
 
-  const login = (email: string, password: string) => {
-    if (
-      email === mockUser.email &&
-      password === mockUser.password
-    ) {
-      const userData = { name: mockUser.name, email };
-      setUser(userData);
-      localStorage.setItem("mock_user", JSON.stringify(userData));
-      return true;
-    }
-    return false;
+  // ✅ login แบบ throw error
+  const login = async (email: string, password: string) => {
+    const result = await mockLogin(email, password); // ถ้าผิด -> throw
+
+    localStorage.setItem("token", result.token);
+    localStorage.setItem("user", JSON.stringify(result.user));
+
+    setUser(result.user);
+    setLoginModalOpen(false);
   };
 
   const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-    localStorage.removeItem("mock_user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        login,
+        logout,
+        loginModalOpen,
+        openLoginModal: () => setLoginModalOpen(true),
+        closeLoginModal: () => setLoginModalOpen(false),
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  if (!ctx) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
   return ctx;
-};
+}
