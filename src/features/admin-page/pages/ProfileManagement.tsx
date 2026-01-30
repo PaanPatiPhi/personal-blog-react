@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Toast from "@/shared/components/Toast";
 
 /**
  * type สำหรับ form profile
@@ -11,6 +12,7 @@ type ProfileForm = {
   bio: string;
   avatar: string; // url รูป profile
 };
+
 
 export default function ProfileManagement() {
   /**
@@ -25,7 +27,10 @@ export default function ProfileManagement() {
 When i’m not writing, I spend time volunteering at my local animal shelter.`,
     avatar: "https://i.pravatar.cc/150?img=3",
   });
-
+const [showToast, setShowToast] = useState(false);
+const [toastTitle, setToastTitle] = useState("");
+const [toastDescription, setToastDescription] = useState("");
+const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
   /**
    * handle เปลี่ยนค่าฟอร์มแบบ generic
    * ลดการเขียน onChange ซ้ำ ๆ
@@ -54,11 +59,17 @@ When i’m not writing, I spend time volunteering at my local animal shelter.`,
    * handle save profile
    * จุดนี้ปกติจะเรียก API PUT /profile
    */
-  const handleSave = () => {
-    console.log("Save profile", form);
-    // TODO: call API
-  };
 
+  const handleSave = async () => {
+  await navigator.clipboard.writeText(window.location.href);
+
+  setToastTitle("Saved profile");
+  setToastDescription("Your profile has been successfully created.");
+  setToastType("success");
+  setShowToast(true);
+
+  setTimeout(() => setShowToast(false), 2000);
+};
   return (
     <div className="space-y-6 px-15">
       {/* ===== Header ===== */}
@@ -146,6 +157,15 @@ When i’m not writing, I spend time volunteering at my local animal shelter.`,
           {form.bio.length} / 120
         </div>
       </div>
+
+      {/* ===== Toast ===== */}
+      <Toast
+  show={showToast}
+  title={toastTitle}
+  description={toastDescription}
+  type={toastType}
+/>
+
     </div>
   );
 }
