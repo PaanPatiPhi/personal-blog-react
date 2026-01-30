@@ -4,7 +4,7 @@ import AdminSidebar from "../components/AdminSideBar";
 function AdminLayout() {
   return (
     <div className="min-h-screen bg-[#f3f3f3]">
-      <div className="flex max-w-[1400px] mx-auto">
+      <div className="flex max-w-[1440px] mx-auto">
         {/* Sidebar */}
         <AdminSidebar />
 
