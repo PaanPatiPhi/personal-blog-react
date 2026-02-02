@@ -16,6 +16,9 @@ import CategoryManagement from "@/features/admin-page/pages/CategoryManagement";
 import CreateArticlePage from "@/features/admin-page/pages/CreateArticlePage";
 import CreateCategoryPage from "@/features/admin-page/pages/CreateCategoryPage";
 import ProfileManagement from "@/features/admin-page/pages/ProfileManagement";
+import NotificationPage from "@/features/admin-page/notifications/NotificationPage";
+import ResetPasswordPageForAdmin from "@/features/admin-page/resetpassword/pages/ResetPasswordPage";
+import HealthTestPage from "@/pages/HealthTestPage";
 
 export default function AppRoutes() {
   return (
@@ -43,9 +46,11 @@ export default function AppRoutes() {
   <Route path="categories" element={<CategoryManagement />} /> 
   <Route path="categories/create" element={<CreateCategoryPage />} />
   <Route path="profile" element={<ProfileManagement/>} />
+  <Route path="notification" element={<NotificationPage/>} />
+  <Route path="reset-password" element={<ResetPasswordPageForAdmin />} />
 </Route>
 
-
+    <Route path="health-test" element={<HealthTestPage/>} />
     </Routes>
   );
 }
