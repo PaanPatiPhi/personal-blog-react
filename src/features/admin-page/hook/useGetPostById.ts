@@ -15,6 +15,7 @@ export type PostDetail = {
   status?: "published" | "draft";
   createdAt?: string;
   updatedAt?: string;
+  introduction?:string;
 };
 
 /**
