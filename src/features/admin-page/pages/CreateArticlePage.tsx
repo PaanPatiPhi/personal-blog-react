@@ -10,15 +10,13 @@ import imageIcon from "../../../assets/icon/admin-page/Img_box_light.png"
  * - ถ้าไม่มี id → create mode
  */
 export default function CreateArticlePage() {
-  const { id } = useParams(); // อ่าน id จาก url (/admin/articles/:id/edit)
+const { id } = useParams();
 
-  const isEditMode = Boolean(id); // ใช้แยก create / edit
+const articleId = id ? Number(id) : undefined;
+const isEditMode = Boolean(articleId);
 
-  /**
-   * เรียก API เฉพาะตอน edit
-   * - ถ้า id ไม่มี → hook ควร return null / skip fetch
-   */
-  const { data: article, isLoading } = useGetPostById(id);
+const { data: article, isLoading } = useGetPostById(articleId);
+
 
   /**
    * state ของฟอร์ม
