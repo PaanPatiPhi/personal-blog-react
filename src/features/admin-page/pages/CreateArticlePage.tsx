@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useGetPostById from "@/features/admin-page/hook/useGetPostById";
 import imageIcon from "../../../assets/icon/admin-page/Img_box_light.png"
@@ -11,7 +11,6 @@ import imageIcon from "../../../assets/icon/admin-page/Img_box_light.png"
  */
 export default function CreateArticlePage() {
   const { id } = useParams(); // อ่าน id จาก url (/admin/articles/:id/edit)
-  const navigate = useNavigate();
 
   const isEditMode = Boolean(id); // ใช้แยก create / edit
 

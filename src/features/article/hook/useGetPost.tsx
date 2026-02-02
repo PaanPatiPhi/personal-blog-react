@@ -14,8 +14,8 @@ type Blog = {
 };
 
 type UseGetPostParams = {
-  category: string;
-  keyword: string;
+  category?: string;
+  keyword?: string;
 };
 
 const LIMIT = 6;

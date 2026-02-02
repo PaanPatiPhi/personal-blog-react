@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 
 /**
