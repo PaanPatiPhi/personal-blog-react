@@ -2,33 +2,33 @@ import { useNavigate } from "react-router-dom";
 
 /**
  * Props ของ GuestMenu
- * - onClose: callback สำหรับปิด mobile menu (ส่งมาจาก NavBar)
- *   desktop จะไม่ใช้ prop นี้
+ * - mobile: บอกว่า render ใน mobile dropdown
+ * - onClose: callback ปิด menu จาก NavBar
  */
 type GuestMenuProps = {
+  mobile?: boolean;
   onClose?: () => void;
 };
 
-function GuestMenu({ onClose }: GuestMenuProps) {
-  // ใช้สำหรับเปลี่ยนหน้า
+function GuestMenu({ mobile = false, onClose }: GuestMenuProps) {
   const navigate = useNavigate();
 
   /**
-   * helper function
-   * - navigate ไปหน้าใหม่
-   * - ปิด mobile menu (ถ้ามี)
+   * helper สำหรับ mobile
+   * - เปลี่ยนหน้า
+   * - ปิด menu
    */
   const handleNavigate = (path: string) => {
     navigate(path);
-    onClose?.(); // ปิด mobile dropdown (ถ้า render ใน mobile)
+    onClose?.();
   };
 
-  return (
-    <div className="flex gap-x-2 relative">
-      {/* ================= Mobile menu ================= */}
-      {/* แสดงเฉพาะ mobile (md:hidden)
-          position absolute เหมือนเดิม ไม่เปลี่ยน UI */}
-      <div className="absolute top-full right-0 w-full bg-white shadow-lg md:hidden">
+  // ===============================
+  // ===== Mobile version ==========
+  // ===============================
+  if (mobile) {
+    return (
+      <div className="flex flex-col">
         <button
           className="w-full py-3"
           onClick={() => handleNavigate("/login")}
@@ -43,18 +43,23 @@ function GuestMenu({ onClose }: GuestMenuProps) {
           Sign Up
         </button>
       </div>
+    );
+  }
 
-      {/* ================= Desktop menu ================= */}
-      {/* ปุ่ม desktop แสดงเหมือนเดิมทุกอย่าง */}
+  // ===============================
+  // ===== Desktop version =========
+  // ===============================
+  return (
+    <div className="flex gap-x-2">
       <button
-        className="hidden md:block w-[127px] h-[48px] border rounded-full"
+        className="w-[127px] h-[48px] border rounded-full"
         onClick={() => navigate("/login")}
       >
         Log In
       </button>
 
       <button
-        className="hidden md:block w-[127px] h-[48px] bg-black text-white rounded-full"
+        className="w-[127px] h-[48px] bg-black text-white rounded-full"
         onClick={() => navigate("/signup")}
       >
         Sign Up
