@@ -29,6 +29,30 @@ const testHealth = async () => {
     }
 };
 
+const testGet = async () => {
+    setResult(null);
+    setError(null);
+    setLoading(true);
+
+    try {
+        const res = await axios.get(`${API_BASE_URL}/posts`);
+        setResult(res.data);
+        
+    }
+    catch (error: unknown){
+        console.log(error)
+        const err = error as any;
+        setError({
+            status: err?.response?.status,
+            data: err?.response?.data,
+            message: err?.message ?? String(error),
+        });
+    }
+    finally { 
+        setLoading(false);
+    }
+};
+
 return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white px-6">
     <h1 className="text-4xl font-bold mb-6">Health Test</h1>
@@ -40,6 +64,14 @@ return (
         disabled={loading}
         >
         {loading ? "Loading..." : "Test /health"}
+        </button>
+
+        <button
+        className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={testGet}
+        disabled={loading}
+        >
+        {loading ? "Loading..." : "Test /Get"}
         </button>
 
         {loading && (
