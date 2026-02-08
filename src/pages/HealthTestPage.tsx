@@ -59,7 +59,7 @@ return (
 
     <div className="bg-slate-800 rounded-xl p-6 text-center shadow-lg mb-6 w-full max-w-2xl">
         <button
-        className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed mx-10"
         onClick={testHealth}
         disabled={loading}
         >
