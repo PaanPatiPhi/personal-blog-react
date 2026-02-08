@@ -18,7 +18,11 @@ import CreateCategoryPage from "@/features/admin-page/pages/CreateCategoryPage";
 import ProfileManagement from "@/features/admin-page/pages/ProfileManagement";
 import NotificationPage from "@/features/admin-page/notifications/NotificationPage";
 import ResetPasswordPageForAdmin from "@/features/admin-page/resetpassword/pages/ResetPasswordPage";
+
 import HealthTestPage from "@/pages/HealthTestPage";
+
+//admin-auth
+import AdminLoginPage from "@/features/auth/pages/AdminLoginPage";
 
 export default function AppRoutes() {
   return (
@@ -37,6 +41,7 @@ export default function AppRoutes() {
       <Route path="/signup" element={<SignupPage />} />
 
       {/* admin */}
+<Route path="/admin/login" element={<AdminLoginPage />} />
 
 <Route path="/admin" element={<AdminLayout />}>
   <Route index element={<ArticleManagement />} />
