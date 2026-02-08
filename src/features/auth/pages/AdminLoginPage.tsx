@@ -25,7 +25,7 @@ return (
       type="success"
     />
 
-    <AdminLoginForm onSuccess={handleLoginSuccess} />
+    <AdminLoginForm {...({ onSuccess: handleLoginSuccess } as any)} />
   </>
 );
 
