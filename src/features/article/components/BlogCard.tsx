@@ -17,7 +17,7 @@ interface BlogCardProps {
 function BlogCard({ 
   id,
   image, 
-  category, 
+  category_id, 
   title, 
   description, 
   author, 
@@ -30,10 +30,16 @@ function BlogCard({
     // navigate ไปยังหน้า post พร้อมส่งข้อมูลผ่าน state เพื่อใช้ได้ทันที
     navigate(`/posts/${id}`, {
       state: {
-        post: { id, image, category, title, description, author, authorImage, date },
+        post: { id, image, category_id, title, description, author, authorImage, date },
       },
     });
   };
+
+  const CATEGORY_MAP: Record<number, string> = {
+  1: "Cat",
+  2: "Inspiration",
+  3: "General"
+};
 
   return (
     <div
@@ -59,7 +65,7 @@ function BlogCard({
       <div className="flex flex-col gap-3">
         {/* หมวดหมู่ (Badge) */}
         <span className="w-fit px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-medium rounded-md">
-          {category}
+          {CATEGORY_MAP[category_id]}
         </span>
 
         {/* หัวข้อ */}

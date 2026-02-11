@@ -61,8 +61,8 @@ function useGetPost({ category, keyword }: UseGetPostParams) {
           signal: controller.signal,
         }
       );
-      console.log(res.data.data)
-      const newPosts: Blog[] = res.data.data?? [];
+
+      const newPosts: Blog[] = res.data.posts ?? [];
 
       setBlogData((prev) => {
         const existingIds = new Set(prev.map((p) => p.id));

@@ -6,12 +6,12 @@ import AuthorCard from "./AuthorCard";
 import PostActions from "./PostActions";
 import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
-import LoginModal from "../../auth/LoginModal";
+import LoginModal from "../../auth/components/LoginModal";
 import PostMeta from "./PostMeta";
 import CopySuccessToast from "@/shared/components/CopySuccessToast";
 
 
-import { useAuth } from "@/features/auth/context/AuthContext";
+import { useAuth } from "@/features/auth/context/authentication";
 import { usePost } from "../hooks/usePost";
 import { usePostActions } from "../hooks/usePostActions";
 import { useComments } from "../hooks/useComments";
@@ -40,6 +40,11 @@ function ViewPostPage() {
     setShowCopyToast(false);
   }, 2000);
 };
+const CATEGORY_MAP: Record<number, string> = {
+  1: "Cat",
+  2: "Inspiration",
+  3: "General"
+};
 
 
   const actions = usePostActions({
@@ -60,7 +65,7 @@ function ViewPostPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_305px] gap-10">
           <div className="flex flex-col gap-8">
             <PostMeta
-              category={post.category}
+              category={CATEGORY_MAP[post.category_id]}
               date={post.date}
               title={post.title}
               description={post.description}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import hamburgerIcon from "../../../assets/icon/hamburger_bar.png";
-import { useAuth } from "@/features/auth/context/AuthContext";
+import { useAuth } from "@/features/auth/context/authentication";
 import GuestMenu from "./GuessMenu";
 import UserMenu from "./UserMenu";
 

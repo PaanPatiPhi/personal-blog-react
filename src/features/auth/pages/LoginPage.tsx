@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authentication";
 import toast from "react-hot-toast";
 
 
@@ -15,6 +15,11 @@ function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const data = {
+      email,
+      password
+    }
+
     // ✅ validation ขั้นต่ำ
     if (!email || !password) {
       setError("Email and password are required");
@@ -28,10 +33,9 @@ function LoginPage() {
 
     setError("");
 
-    // 🔜 ต่อ API ทีหลัง
-    console.log("LOGIN:", { email, password });
-    const success = login(email, password);
-
+  //   // 🔜 ต่อ API ทีหลัง
+    console.log("LOGIN:", data);
+    const success = login(data);
     if (!success) {
     toast.error("Invalid email or password");
     return;
@@ -39,9 +43,9 @@ function LoginPage() {
 
   toast.success("Login successful");
 
-  setTimeout(() => {
-    navigate("/");
-  }, 1000);
+  // setTimeout(() => {
+  //   navigate("/");
+  // }, 1000);
   };
 
   return (

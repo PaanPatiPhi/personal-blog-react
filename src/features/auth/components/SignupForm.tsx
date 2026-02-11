@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SignupSuccess from "./SignupSuccess";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authentication.tsx"
 
 type SignupFormValues = {
   name: string;
@@ -27,6 +28,8 @@ function SignupForm({ onSuccess }: SignupFormProps) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [registered, setRegistered] = useState(false);
+
+  const {register} = useAuth();
 
   const navigate = useNavigate();
 
@@ -76,14 +79,13 @@ function SignupForm({ onSuccess }: SignupFormProps) {
       console.log("signup payload:", form);
       await new Promise((res) => setTimeout(res, 800));
 
-      // persist mock user for demo
-      const mockUser = {
-        id: Date.now(),
+      const signUpUser = {
         name: form.name,
         email: form.email,
         username: form.username,
+        password: form.password,
       };
-      localStorage.setItem("mock_user", JSON.stringify(mockUser));
+      await register(signUpUser)
 
       setRegistered(true);
     } finally {
