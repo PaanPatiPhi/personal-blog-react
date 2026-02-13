@@ -7,8 +7,8 @@ import UserMenu from "./UserMenu";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useAuth();
-console.log("NavBar user:", user);
+  const { isAuthenticated } = useAuth();
+console.log("NavBar user:", isAuthenticated);
 
   return (
     <nav className="w-full border-b border-brown-200 bg-white sticky top-0 z-50">
@@ -29,7 +29,7 @@ console.log("NavBar user:", user);
 
           {/* desktop auth menu */}
           <div className="hidden md:block">
-            {user ? <UserMenu /> : <GuestMenu />}
+            {isAuthenticated ? <UserMenu /> : <GuestMenu />}
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@ console.log("NavBar user:", user);
       {/* mobile dropdown */}
 {isOpen && (
   <div className="md:hidden border-t bg-white shadow-lg px-6 py-4">
-    {user ? (
+    {isAuthenticated ? (
       <UserMenu mobile onClose={() => setIsOpen(false)} />
     ) : (
       <GuestMenu mobile onClose={() => setIsOpen(false)} />

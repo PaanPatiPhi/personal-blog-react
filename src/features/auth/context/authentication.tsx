@@ -12,12 +12,12 @@ import { jwtDecode } from "jwt-decode";
    Types
 ====================== */
 
-// interface JwtPayload {
-//   sub: string;
-//   email?: string;
-//   role?: string;
-//   exp?: number;
-// }
+interface JwtPayload {
+  sub: string;
+  email?: string;
+  role?: string;
+  exp?: number;
+}
 
 interface User {
   name: string;

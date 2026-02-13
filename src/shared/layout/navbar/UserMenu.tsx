@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/features/auth/context/AuthContext";
+import { useAuth } from "@/features/auth/context/authentication";
+import { useProfile } from "@/features/profile/hooks/useProfile";
 
 // icon ต่าง ๆ
 import profileIcon from "../../../assets/icon/NavBar/User_duotone.png";
@@ -46,6 +47,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
     setOpen(false);  // ปิด desktop dropdown
     onClose?.();     // ปิด mobile menu
   };
+    const profile = useProfile().profile as { name?: string; profile_pic?: string } | null;
 
   // ===============================
   // ===== Mobile version ==========
@@ -95,8 +97,8 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
         onClick={() => setOpen(!open)}
       >
         <img
-          src={user?.image || "/avatar.png"}
-          alt={user?.name}
+          src={profile?.profile_pic || "/avatar.png"}
+          alt={profile?.name}
           className="w-8 h-8 rounded-full object-cover"
         />
         <span>{user?.name}</span>

@@ -20,6 +20,8 @@ import NotificationPage from "@/features/admin-page/notifications/NotificationPa
 import ResetPasswordPageForAdmin from "@/features/admin-page/resetpassword/pages/ResetPasswordPage";
 
 import HealthTestPage from "@/pages/HealthTestPage";
+//loading
+import LoadingPage from "@/shared/layout/loading/Loading";
 
 //admin-auth
 import AdminLoginPage from "@/features/auth/pages/AdminLoginPage";
@@ -27,7 +29,7 @@ import AdminLoginPage from "@/features/auth/pages/AdminLoginPage";
 export default function AppRoutes() {
   return (
     <Routes>
-
+      
       {/* public */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<ArticlesPage />} />

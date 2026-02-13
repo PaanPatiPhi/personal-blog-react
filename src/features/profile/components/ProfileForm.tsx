@@ -1,30 +1,89 @@
-// features/profile/components/ProfileForm.tsx
-import { useState } from "react";
-import { updateProfile } from "@/mock/mockProfileService";
-import { useAuth } from "@/features/auth/context/AuthContext";
+import { useState, useEffect, useRef } from "react";
+import { useProfile } from "../hooks/useProfile";
+import LoadingPage from "@/shared/layout/loading/Loading";
 
 export default function ProfileForm() {
-  const { user } = useAuth();
-  const [name, setName] = useState(user?.name ?? "");
-  const [username, setUsername] = useState("moodeng.cute");
+  const { profile, loading: profileLoading, updateProfile } = useProfile();
+
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (profile) {
+      setName(profile.name ?? "");
+      setUsername(profile.username ?? "");
+      setPreview(profile.profile_pic ?? null);
+    }
+  }, [profile]);
+
+  if (profileLoading) return <LoadingPage />;
+  if (!profile) return <p>No profile</p>;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+
+    // preview ทันที
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSave = async () => {
-    setLoading(true);
-    await updateProfile({ name, username });
-    setLoading(false);
-    alert("Profile updated");
+    try {
+      setLoading(true);
+
+      await updateProfile({
+        name,
+        username,
+        imageFile
+      });
+
+      alert("Profile updated");
+      setImageFile(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="bg-(--color-brown-200) p-10 rounded-2xl w-[550px]">
       <div className="flex items-center gap-4 mb-4">
-        <img src={user?.image} className="w-20 h-20 rounded-full" />
-        <button className="border px-7 py-2 rounded-full text-sm bg-white">
+        <img
+          src={preview || ""}
+          className="w-20 h-20 rounded-full object-cover"
+        />
+
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="border px-7 py-2 rounded-full text-sm bg-white"
+        >
           Upload profile picture
         </button>
+
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          hidden
+        />
       </div>
-    <hr className="w-[95%] my-9 text-(--color-brown-300)"/>
+
+      <hr className="w-[95%] my-9 text-(--color-brown-300)" />
+
       <label className="block text-sm mb-1 text-(--color-brown-400)">Name</label>
       <input
         className="w-full mb-3 p-2 bg-white rounded-xl border-(--color-brown-300)"
@@ -39,19 +98,13 @@ export default function ProfileForm() {
         onChange={(e) => setUsername(e.target.value)}
       />
 
-      <label className="block text-sm mb-4 text-gray-400">Email</label>
-      <input
-        disabled
-        className="w-full p-2 rounded text-(--color-brown-300)"
-        value={user?.email}
-      />
 
       <button
         onClick={handleSave}
         disabled={loading}
         className="mt-4 bg-black text-white px-8 py-2 rounded-full"
       >
-        Save
+        {loading ? "Saving..." : "Save"}
       </button>
     </div>
   );
