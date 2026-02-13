@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useProfile } from "../hooks/useProfile";
 import LoadingPage from "@/shared/layout/loading/Loading";
 import avatar from "../../../assets/image/profile/avatar.png"
+import Toast from "@/shared/components/Toast";
+
 
 
 export default function ProfileForm() {
@@ -13,6 +15,11 @@ export default function ProfileForm() {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+//toast
+  const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("");
+  const [toastDescription, setToastDescription] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -53,8 +60,12 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
 
 
-    alert("Profile updated");
+     setToastTitle("Saved profile");
+    setToastDescription("Your profile has been successfully updated.");
+    setToastType("success");
+    setShowToast(true);
     setImageFile(null);
+    setTimeout(() => setShowToast(false), 2000);
 
   } catch (err) {
     console.error(err);
@@ -114,6 +125,15 @@ const handleSubmit = async (e: React.FormEvent) => {
       >
         {loading ? "Saving..." : "Save"}
       </button>
+
+      <Toast
+  show={showToast}
+  title={toastTitle}
+  description={toastDescription}
+  type={toastType}
+/>
     </form>
+
+
   );
 }

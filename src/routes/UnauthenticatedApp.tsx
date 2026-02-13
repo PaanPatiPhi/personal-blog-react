@@ -23,7 +23,8 @@ function UnauthenticatedApp(){
                 <Route path="/admin/login" element={<AdminLoginPage />} />                
             </Route>
             <Route path="*" element={<NotFoundPage/> } />
-
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        
         </Routes>
         </>
     )

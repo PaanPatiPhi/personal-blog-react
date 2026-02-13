@@ -1,68 +1,31 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { ProfileContext } from "./Profile-context";
+import type {
+  ProfileData,
+  UpdateProfilePayload,
+} from "./Profile-context";
 
-/* ======================
-   Types
-====================== */
-
-export type ProfileData = {
-  id: string;
-  username: string;
-  name: string;
-  email: string;
-  profile_pic: string;
-};
-
-export type UpdateProfilePayload = {
-  username?: string;
-  name?: string;
-  imageFile?: File | null;
-};
-
-/* ======================
-   Context Type
-====================== */
-
-type ProfileContextType = {
-  profile: ProfileData | null;
-  loading: boolean;
-  updateProfile: (data: UpdateProfilePayload) => Promise<void>;
-  refetch: () => Promise<void>;
-};
-
-/* ======================
-   Create Context
-   (ยังไม่ใส่ค่า default จริง เพราะจะบังคับใช้ผ่าน Provider)
-====================== */
-
-export const ProfileContext = createContext<
-  ProfileContextType | undefined
->(undefined);
-
-/* ======================
-   Provider Component
-   ทำหน้าที่เป็น "single source of truth"
-====================== */
+/*
+  ProfileProvider
+  Single source of truth สำหรับ profile ทั้งแอป
+*/
 
 export const ProfileProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  // เก็บ profile กลางของทั้งแอป
   const [profile, setProfile] = useState<ProfileData | null>(null);
-
-  // ใช้บอกสถานะกำลังโหลด
   const [loading, setLoading] = useState(true);
 
   /* ======================
-     Fetch Profile จาก backend
-     ใช้ตอน mount หรือเวลาต้องการ refetch
+     Fetch profile
   ====================== */
   const fetchProfile = async () => {
     try {
       const res = await api.get("/me/profile");
-      setProfile(res.data); // อัปเดต state กลาง
+      setProfile(res.data);
     } catch (err) {
       console.error("Fetch profile error:", err);
     } finally {
@@ -70,17 +33,14 @@ export const ProfileProvider = ({
     }
   };
 
-  /* ======================
-     โหลด profile ครั้งแรกตอน Provider mount
-  ====================== */
+  /* โหลดครั้งแรกตอน mount */
   useEffect(() => {
     fetchProfile();
   }, []);
 
   /* ======================
-     Update Profile
-     หลัง update สำเร็จ จะ setProfile ทันที
-     ทุก component ที่ใช้ context นี้จะ re-render
+     Update profile
+     หลัง update สำเร็จ → fetch ใหม่จาก server
   ====================== */
   const updateProfile = async (
     formValues: UpdateProfilePayload
@@ -99,10 +59,17 @@ export const ProfileProvider = ({
       formData.append("imageFile", formValues.imageFile);
     }
 
-    const res = await api.put("/me/profile", formData);
+    try {
+      await api.put("/me/profile", formData);
 
-    // 🔥 จุดสำคัญ: update state กลางทันที
-    setProfile(res.data);
+      // 🔥 สำคัญ: ดึงข้อมูลใหม่จาก backend
+      const fresh = await api.get("/me/profile");
+
+      setProfile(fresh.data);
+    } catch (err) {
+      console.error("Update profile error:", err);
+      throw err;
+    }
   };
 
   return (
