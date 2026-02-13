@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useProfile } from "../hooks/useProfile";
 import LoadingPage from "@/shared/layout/loading/Loading";
+import avatar from "../../../assets/image/profile/avatar.png"
+
 
 export default function ProfileForm() {
-  const { profile, loading: profileLoading, updateProfile } = useProfile();
+  const { profile, loading: profileLoading, updateProfile} = useProfile();
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -38,30 +40,36 @@ export default function ProfileForm() {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = async () => {
-    try {
-      setLoading(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();   // กันหน้า reload
 
-      await updateProfile({
-        name,
-        username,
-        imageFile
-      });
+  try {
+    setLoading(true);
 
-      alert("Profile updated");
-      setImageFile(null);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    await updateProfile({
+      name,
+      username,
+      imageFile
+    });
+
+
+    alert("Profile updated");
+    setImageFile(null);
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
-    <div className="bg-(--color-brown-200) p-10 rounded-2xl w-[550px]">
-      <div className="flex items-center gap-4 mb-4">
+<form
+  onSubmit={handleSubmit}
+  className="bg-(--color-brown-200) p-10 rounded-2xl w-[550px]"
+>      <div className="flex items-center gap-4 mb-4">
         <img
-          src={preview || ""}
+          src={preview || avatar}
           className="w-20 h-20 rounded-full object-cover"
         />
 
@@ -100,12 +108,12 @@ export default function ProfileForm() {
 
 
       <button
-        onClick={handleSave}
+        type="submit"
         disabled={loading}
         className="mt-4 bg-black text-white px-8 py-2 rounded-full"
       >
         {loading ? "Saving..." : "Save"}
       </button>
-    </div>
+    </form>
   );
 }

@@ -7,6 +7,8 @@ import { useProfile } from "@/features/profile/hooks/useProfile";
 import profileIcon from "../../../assets/icon/NavBar/User_duotone.png";
 import resetPasswordIcon from "../../../assets/icon/NavBar/Refresh_light.png";
 import logoutIcon from "../../../assets/icon/NavBar/Sign_out_squre_light.png";
+import avatar from "../../../assets/image/profile/avatar.png"
+
 
 /**
  * Props ของ UserMenu
@@ -97,7 +99,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
         onClick={() => setOpen(!open)}
       >
         <img
-          src={profile?.profile_pic || "/avatar.png"}
+          src={profile?.profile_pic || avatar}
           alt={profile?.name}
           className="w-8 h-8 rounded-full object-cover"
         />

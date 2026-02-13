@@ -18,6 +18,7 @@ import CreateCategoryPage from "@/features/admin-page/pages/CreateCategoryPage";
 import ProfileManagement from "@/features/admin-page/pages/ProfileManagement";
 import NotificationPage from "@/features/admin-page/notifications/NotificationPage";
 import ResetPasswordPageForAdmin from "@/features/admin-page/resetpassword/pages/ResetPasswordPage";
+import {ProfileProvider } from "@/features/profile/contexts/ProfileProvider";
 
 
 //admin-auth
@@ -33,7 +34,12 @@ function AuthenticatedApp(){
     <Routes>
 
       {/* public */}
-      <Route element={<MainLayout />}>
+      <Route element={          
+        <ProfileProvider>
+            <MainLayout />
+          </ProfileProvider>
+        }>
+      
         <Route path="/" element={<ArticlesPage />} />
         <Route path="/posts/:id" element={<ViewPostPage />} />
         <Route path="/profile" element={<ProfilePage />} />

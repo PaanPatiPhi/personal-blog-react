@@ -1,5 +1,6 @@
 // features/profile/components/ProfileHeader.tsx
 import {useProfile} from "../hooks/useProfile"
+import avatar from "../../../assets/image/profile/avatar.png"
 
 type ProfileHeaderProps = {
   activeTab: "profile" | "password";
@@ -10,7 +11,7 @@ export default function ProfileHeader({ activeTab }: ProfileHeaderProps) {
   return (
     <div className="flex items-center gap-4 mb-8">
       <img
-        src={profile?.profile_pic|| "/avatar.png"}
+        src={profile?.profile_pic|| avatar}
         className="w-12 h-12 rounded-full object-cover"
       />
 
