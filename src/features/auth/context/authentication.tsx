@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
 import axios from "axios";
@@ -12,23 +13,26 @@ import { jwtDecode } from "jwt-decode";
    Types
 ====================== */
 
+// โครงสร้างข้อมูลที่อยู่ใน JWT
 interface JwtPayload {
-  sub: string;
+  sub: string;        // user id
   email?: string;
-  role?: string;
-  exp?: number;
+  role?: string;      // ใช้สำหรับ role-based access
+  exp?: number;       // token expiry
 }
 
+// ข้อมูล user แบบเต็ม (กรณีมี endpoint profile)
 interface User {
   name: string;
   email: string;
   username: string;
 }
 
+// สถานะ auth หลักของระบบ
 interface AuthState {
   loading: boolean;
   error: string | null;
-  user: JwtPayload | null;
+  user: JwtPayload | null;  // user จาก JWT (source of truth)
 }
 
 interface LoginPayload {
@@ -51,7 +55,8 @@ interface AuthContextType {
   register: (data: RegisterPayload) => Promise<void>;
   logout: () => void;
 
-  isAuthenticated: boolean;
+  isAuthenticated: boolean;   // เช็คว่า login แล้วหรือยัง
+  isAdmin: boolean;           // เช็ค role admin
 
   loginModalOpen: boolean;
   openLoginModal: () => void;
@@ -75,18 +80,46 @@ const AuthContext = createContext<AuthContextType | undefined>(
 ====================== */
 
 function AuthProvider({ children }: AuthProviderProps) {
+  const navigate = useNavigate();
+
+  // state หลักของ auth (ถือเป็น source of truth)
   const [state, setState] = useState<AuthState>({
     loading: false,
     error: null,
     user: null,
   });
 
+  // optional: เก็บ user profile เต็ม
   const [user, setUser] = useState<User | null>(null);
+
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const navigate = useNavigate();
+  /* ======================
+     Restore Token on Refresh
+     - ทำให้ refresh แล้วไม่หลุด login
+  ====================== */
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  /* -------- login -------- */
+    if (token) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        setState({
+          loading: false,
+          error: null,
+          user: decoded,
+        });
+      } catch {
+        // ถ้า token เสีย ให้ลบออก
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
+
+  /* ======================
+     Login
+  ====================== */
   const login = async (data: LoginPayload) => {
     try {
       setState(prev => ({ ...prev, loading: true }));
@@ -97,21 +130,27 @@ function AuthProvider({ children }: AuthProviderProps) {
       );
 
       const token = result.data.access_token;
+
+      // เก็บ token ลง localStorage
       localStorage.setItem("token", token);
 
-      const decoded = jwtDecode(token);
+      // decode token เพื่อดึง role / id
+      const decoded = jwtDecode<JwtPayload>(token);
 
+      // อัปเดต state (source of truth)
       setState({
         loading: false,
         error: null,
         user: decoded,
       });
 
-      setUser(user);
+      // ปิด modal
       setLoginModalOpen(false);
+
       navigate("/");
-    } catch(error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
+
       setState({
         loading: false,
         error: "Login failed",
@@ -120,7 +159,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  /* -------- register -------- */
+  /* ======================
+     Register
+  ====================== */
   const register = async ({
     email,
     password,
@@ -135,16 +176,19 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       alert("Sign up completed. Please verify email.");
       navigate("/login");
-    } catch(error) {
-        console.log(error)
+    } catch (error) {
+      console.log(error);
       alert("Sign up failed");
     }
   };
 
-  /* -------- logout -------- */
+  /* ======================
+     Logout
+     - ลบ token
+     - reset state
+  ====================== */
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
 
     setState({
       loading: false,
@@ -153,13 +197,24 @@ function AuthProvider({ children }: AuthProviderProps) {
     });
 
     setUser(null);
+
     navigate("/");
   };
 
-  const isAuthenticated = Boolean(
-    localStorage.getItem("token")
-  );
+  /* ======================
+     Derived State
+     - คำนวณจาก state.user
+  ====================== */
 
+  // login แล้วหรือยัง
+  const isAuthenticated = Boolean(state.user);
+
+  // เช็ค role admin
+  const isAdmin = state.user?.role === "admin";
+
+  /* ======================
+     Provider Value
+  ====================== */
   return (
     <AuthContext.Provider
       value={{
@@ -169,7 +224,9 @@ function AuthProvider({ children }: AuthProviderProps) {
         login,
         register,
         logout,
+
         isAuthenticated,
+        isAdmin,
 
         loginModalOpen,
         openLoginModal: () => setLoginModalOpen(true),
@@ -182,16 +239,18 @@ function AuthProvider({ children }: AuthProviderProps) {
 }
 
 /* ======================
-   Hook
+   Custom Hook
 ====================== */
 
 const useAuth = () => {
   const ctx = useContext(AuthContext);
+
   if (!ctx) {
     throw new Error(
       "useAuth must be used within AuthProvider"
     );
   }
+
   return ctx;
 };
 
