@@ -3,12 +3,13 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
 } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import SignupSuccess from "../components/SignupSuccess";
+import { api } from "@/lib/api";
 
+
+import type { ReactNode } from "react"
 /* ======================
    Types
 ====================== */
@@ -26,6 +27,7 @@ interface User {
   name: string;
   email: string;
   username: string;
+  role: string;
 }
 
 // สถานะ auth หลักของระบบ
@@ -47,17 +49,21 @@ interface RegisterPayload {
   name: string;
 }
 
+
+
 interface AuthContextType {
   state: AuthState;
   user: User | null;
 
-  login: (data: LoginPayload) => Promise<void>;
+  userLogin: (data: LoginPayload) => Promise<void>;  
+  adminLogin: (data: LoginPayload) => Promise<void>;
+
   register: (data: RegisterPayload) => Promise<void>;
   logout: () => void;
 
   isAuthenticated: boolean;   // เช็คว่า login แล้วหรือยัง
   isAdmin: boolean;           // เช็ค role admin
-
+  
   loginModalOpen: boolean;
   openLoginModal: () => void;
   closeLoginModal: () => void;
@@ -91,58 +97,71 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   // optional: เก็บ user profile เต็ม
   const [user, setUser] = useState<User | null>(null);
-
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  
+
 
   /* ======================
      Restore Token on Refresh
      - ทำให้ refresh แล้วไม่หลุด login
   ====================== */
-  useEffect(() => {
+useEffect(() => {
+  const restoreUser = async () => {
     const token = localStorage.getItem("token");
 
-    if (token) {
-      try {
-        const decoded = jwtDecode<JwtPayload>(token);
+    if (!token) return;
 
-        setState({
-          loading: false,
-          error: null,
-          user: decoded,
-        });
-      } catch {
-        // ถ้า token เสีย ให้ลบออก
-        localStorage.removeItem("token");
-      }
+    try {
+      const response = await api.get("/auth/get-user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setState({
+        loading: false,
+        error: null,
+        user: response.data, // ต้องมี role อยู่ในนี้
+      });
+
+    } catch (error) {
+      localStorage.removeItem("token");
+      console.log(error)
+      setState({
+        loading: false,
+        error: null,
+        user: null,
+      });
     }
-  }, []);
+  };
+
+  restoreUser();
+}, []);
 
   /* ======================
      Login
   ====================== */
-  const login = async (data: LoginPayload) => {
+  const userLogin = async (data: LoginPayload) => {
     try {
       setState(prev => ({ ...prev, loading: true }));
 
-      const result = await axios.post(
-        "http://localhost:4002/auth/login",
-        data
-      );
+const result = await api.post("/auth/login", data);
 
-      const token = result.data.access_token;
+const token = result.data.access_token;
+localStorage.setItem("token", token);
 
-      // เก็บ token ลง localStorage
-      localStorage.setItem("token", token);
+const profile = await api.get("/auth/get-user", {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
-      // decode token เพื่อดึง role / id
-      const decoded = jwtDecode<JwtPayload>(token);
 
-      // อัปเดต state (source of truth)
-      setState({
-        loading: false,
-        error: null,
-        user: decoded,
-      });
+setState({
+  loading: false,
+  error: null,
+  user: profile.data,
+});
+
+
 
       // ปิด modal
       setLoginModalOpen(false);
@@ -159,6 +178,40 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const adminLogin = async (data: LoginPayload) => {
+  try {
+    setState(prev => ({ ...prev, loading: true }));
+
+    const result = await api.post("/auth/admin/login", data);
+
+    const token = result.data.access_token;
+
+    localStorage.setItem("token", token);
+
+    const user = await api.get("/auth/get-user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setState({
+      loading: false,
+      error: null,
+      user: user.data,
+    });
+
+    return user.data; // ✅ สำคัญ: return ค่าให้ caller
+  } catch (error) {
+    setState({
+      loading: false,
+      error:"Login failed",
+      user: null,
+    });
+
+    throw error; // ✅ สำคัญ: อย่ากลืน error
+  }
+};
+
   /* ======================
      Register
   ====================== */
@@ -169,13 +222,13 @@ function AuthProvider({ children }: AuthProviderProps) {
     name,
   }: RegisterPayload) => {
     try {
-      await axios.post(
-        "http://localhost:4002/auth/register",
+      await api.post(
+        "/auth/register",
         { email, password, username, name }
       );
+      <SignupSuccess />
 
-      alert("Sign up completed. Please verify email.");
-      navigate("/login");
+
     } catch (error) {
       console.log(error);
       alert("Sign up failed");
@@ -211,7 +264,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   // เช็ค role admin
   const isAdmin = state.user?.role === "admin";
-
   /* ======================
      Provider Value
   ====================== */
@@ -221,12 +273,14 @@ function AuthProvider({ children }: AuthProviderProps) {
         state,
         user,
 
-        login,
+        userLogin,
+        adminLogin,
         register,
         logout,
 
         isAuthenticated,
         isAdmin,
+        
 
         loginModalOpen,
         openLoginModal: () => setLoginModalOpen(true),

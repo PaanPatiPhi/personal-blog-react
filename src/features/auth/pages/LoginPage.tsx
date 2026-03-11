@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authentication";
-import toast from "react-hot-toast";
+import Toast from "@/shared/components/Toast";
 
 
 function LoginPage() {
   const navigate = useNavigate();
-    const { login } = useAuth();
+    const { userLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+
+const [showToast, setShowToast] = useState(false);
+const [toastTitle, setToastTitle] = useState("");
+const [toastDescription, setToastDescription] = useState("");
+const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
+
+
 
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,16 +41,20 @@ function LoginPage() {
     }
 
     setError("");
-
-  //   // 🔜 ต่อ API ทีหลัง
-    console.log("LOGIN:", data);
-    const success = login(data);
+    const success = userLogin(data);
+    console.log(success)
     if (!success) {
-    toast.error("Invalid email or password");
+  setToastTitle("Invalid email or password");
+  setToastDescription("");
+  setToastType("error");
+  setShowToast(true);  
     return;
   }
 
-  toast.success("Login successful");
+  setToastTitle("Login Successful");
+  setToastDescription("");
+  setToastType("success");
+  setShowToast(true);  
 
   // setTimeout(() => {
   //   navigate("/");
@@ -72,12 +85,19 @@ function LoginPage() {
         <label className="block text-sm mb-1">Password</label>
         <div className="relative mb-4">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full px-4 py-3 rounded-xl border "
           />
+                    <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         {/* Error */}
@@ -90,7 +110,7 @@ function LoginPage() {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-black text-white rounded-full py-3 mb-4"
+          className="w-full bg-black text-white rounded-full py-3 mb-4 cursor-pointer"
         >
           Log in
         </button>
@@ -106,6 +126,12 @@ function LoginPage() {
           </span>
         </p>
       </form>
+            <Toast
+  show={showToast}
+  title={toastTitle}
+  description={toastDescription}
+  type={toastType}
+/>
     </div>
   );
 }

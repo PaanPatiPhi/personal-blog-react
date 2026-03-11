@@ -52,14 +52,14 @@ function GuestMenu({ mobile = false, onClose }: GuestMenuProps) {
   return (
     <div className="flex gap-x-2">
       <button
-        className="w-[127px] h-[48px] border rounded-full"
+        className="w-[127px] h-[48px] border rounded-full cursor-pointer"
         onClick={() => navigate("/login")}
       >
         Log In
       </button>
 
       <button
-        className="w-[127px] h-[48px] bg-black text-white rounded-full"
+        className="w-[127px] h-[48px] bg-black text-white rounded-full cursor-pointer"
         onClick={() => navigate("/signup")}
       >
         Sign Up

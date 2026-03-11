@@ -1,12 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { adminMenu } from "../config/AdminMenu";
+import { useAuth } from "@/features/auth/context/authentication";
 
 
 const menuClass =
   "flex items-center gap-3 px-4 py-2 rounded text-sm";
 
 export default function AdminSidebar() {
+  const {logout} = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();        // ล้าง auth state + localStorage
+    navigate("/");   // กลับหน้าแรก
+  };
+
   return (
     <aside className="max-w-[20%] w-[18vw] bg-[#f6f4f1] border-r min-h-screen pt-15 pb-6 flex flex-col border-none">
       {/* Logo */}
@@ -45,7 +54,7 @@ export default function AdminSidebar() {
       <div className="mt-auto pt-10 text-sm text-gray-500 px-6">
         <a href="/" className="block mb-4">↗ hh.website</a>
         <hr className="text-(--color-brown-300) my-5"/>
-        <button className="text-left">⎋ Log out</button>
+        <button className="text-left" onClick={handleLogout}>⎋ Log out</button>
       </div>
     </aside>
   );

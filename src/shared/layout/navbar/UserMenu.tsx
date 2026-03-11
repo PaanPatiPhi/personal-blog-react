@@ -22,7 +22,7 @@ type UserMenuProps = {
 
 function UserMenu({ mobile = false, onClose }: UserMenuProps) {
   // ดึง user และ logout function จาก auth context
-  const { user, logout } = useAuth();
+  const { user, logout,isAdmin } = useAuth();
 
   // state สำหรับ desktop dropdown (mobile ไม่ใช้)
   const [open, setOpen] = useState(false);
@@ -111,7 +111,14 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
         <div className="absolute right-0 mt-2 w-56 py-2 bg-white rounded-3xl shadow-lg">
           <button
             className="w-full text-left px-4 py-2 flex gap-3"
-            onClick={() => handleNavigate("/profile?tab=profile")}
+            onClick={() => {
+              if(isAdmin === true){
+              handleNavigate("/admin/profile")
+              }
+              else{
+              handleNavigate("/profile?tab=profile")
+              }
+            }}
           >
             <img src={profileIcon} alt="" />
             Profile
@@ -119,7 +126,11 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
 
           <button
             className="w-full text-left px-4 py-2 flex gap-3"
-            onClick={() => handleNavigate("/profile?tab=password")}
+            onClick={() => {
+              if(isAdmin === true){
+              handleNavigate("/admin/reset-password")
+              }
+              else{handleNavigate("/profile?tab=password")}}}
           >
             <img src={resetPasswordIcon} alt="" />
             Reset password

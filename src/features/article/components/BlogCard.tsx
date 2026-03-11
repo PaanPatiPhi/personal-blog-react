@@ -5,7 +5,7 @@ import DefaultAuthorImage from "../../../assets/image/authors/ThomsanP.png";
 interface BlogCardProps {
   id: number;
   image: string;
-  category: string;
+  category_id: number;
   title: string;
   description: string;
   author: string;

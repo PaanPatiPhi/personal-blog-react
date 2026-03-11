@@ -1,21 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { adminLogin } from "../services/adminAuthApi";
+import { useAuth } from "../context/authentication";
 import Toast from "@/shared/components/Toast";
 
 export default function AdminLoginForm() {
   const navigate = useNavigate();
-
+  const { adminLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("");
+  const [toastDescription, setToastDescription] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error" | "info">(
+    "success",
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+    const data = {
+      email,
+      password,
+    };
     // basic validation
     if (!email || !password) {
       setError("Please enter email and password");
@@ -23,17 +33,20 @@ export default function AdminLoginForm() {
     }
 
     try {
-      await adminLogin({ email, password });
-
+      await adminLogin(data);
       // ✅ show success toast
       setShowSuccessToast(true);
-
+      setToastTitle("Login successfully");
+      setToastDescription("Admin has been successfully logged in.");
+      setToastType("success");
+      setShowToast(true);
       // ✅ redirect หลัง toast แสดง
       setTimeout(() => {
         navigate("/admin");
       }, 1200);
     } catch (err) {
-      setError("Your password is incorrect or this email doesn't exist");
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     }
   };
 
@@ -51,12 +64,8 @@ export default function AdminLoginForm() {
         onSubmit={handleSubmit}
         className="bg-[#EFEEEB] rounded-2xl px-[120px] py-[60px] w-[795px]"
       >
-        <p className="text-center text-sm text-orange-400 mb-1">
-          Admin panel
-        </p>
-        <h1 className="text-center text-2xl font-semibold mb-8">
-          Log in
-        </h1>
+        <p className="text-center text-sm text-orange-400 mb-1">Admin panel</p>
+        <h1 className="text-center text-2xl font-semibold mb-8">Log in</h1>
 
         <div className="space-y-6">
           <div>
@@ -96,6 +105,12 @@ export default function AdminLoginForm() {
           </div>
         )}
       </form>
+      <Toast
+        show={showToast}
+        title={toastTitle}
+        description={toastDescription}
+        type={toastType}
+      />
     </div>
   );
 }

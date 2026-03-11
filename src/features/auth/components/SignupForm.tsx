@@ -29,6 +29,8 @@ function SignupForm({ onSuccess }: SignupFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [registered, setRegistered] = useState(false);
 
+
+
   const {register} = useAuth();
 
   const navigate = useNavigate();
@@ -88,6 +90,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
       await register(signUpUser)
 
       setRegistered(true);
+
     } finally {
       setLoading(false);
     }
@@ -185,6 +188,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
           </button>
         </div>
       )}
+
     </form>
   );
 }

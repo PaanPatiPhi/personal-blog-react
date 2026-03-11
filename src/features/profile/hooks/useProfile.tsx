@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ProfileContext } from "../contexts/Profile-context";
+import { ProfileContext } from "../contexts/profile-context.tsx";
 
 /*
   Custom hook สำหรับดึง profile จาก Context

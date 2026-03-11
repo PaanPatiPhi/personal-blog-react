@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 type Blog = {
   id: number;
   image: string;
-  category: string;
+  category_id: number;
   title: string;
   description: string;
   author: string;
   authorImage: string;
   date: string;
   content: string;
-  status?: string;
+  status_id: number;
   introduction?:string;
 };
 

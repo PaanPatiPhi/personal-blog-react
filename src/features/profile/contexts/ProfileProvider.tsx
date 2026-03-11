@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { ProfileContext } from "./Profile-context";
+import { ProfileContext } from "./profile-context.tsx";
 import type {
   ProfileData,
   UpdateProfilePayload,
-} from "./Profile-context";
+} from "./profile-context.tsx";
 
 /*
   ProfileProvider

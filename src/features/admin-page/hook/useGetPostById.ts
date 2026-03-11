@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/lib/api";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -7,15 +7,14 @@ import { useEffect, useRef, useState } from "react";
  */
 export type PostDetail = {
   id: number;
-  title: string;
-  category: string;
   image: string;
+  category_id: number;
+  title: string;
+  description: string;
+  date: string;
   content: string;
-  author?: string;
-  status?: "published" | "draft";
-  createdAt?: string;
-  updatedAt?: string;
-  introduction?:string;
+  status_id: 1 | 2;
+  like_count:number;
 };
 
 /**
@@ -50,9 +49,9 @@ function useGetPostById(postId?: number) {
     setIsLoading(true);
     setIsError(false);
 
-    axios
+    api
       // เรียก API ตาม id ของบทความ
-      .get(`https://blog-post-project-api.vercel.app/posts/${postId}`, {
+      .get(`/posts/${postId}`, {
         // ส่ง signal เพื่อรองรับ abort
         signal: controller.signal,
       })
