@@ -1,4 +1,5 @@
 import axios from "axios";
+import { supabase } from "./supabase";
 
 /**
  * สร้าง axios instance กลาง
@@ -8,19 +9,22 @@ export const api = axios.create({
   baseURL: "http://localhost:4002",
 });
 
-
 /**
  * Interceptor:
- * - ดึง token จาก localStorage
+ * - ดึง session จาก Supabase
  * - แนบ Authorization header ทุกครั้งก่อนยิง request
  */
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-
-    // ถ้ามี token ให้แนบไป
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // ถ้ามี session ให้แนบ JWT token ไป
+      if (session?.access_token) {
+        config.headers.Authorization = `Bearer ${session.access_token}`;
+      }
+    } catch (error) {
+      console.log('Error getting session:', error);
     }
 
     return config;

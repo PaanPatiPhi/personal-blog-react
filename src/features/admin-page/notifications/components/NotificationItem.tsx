@@ -1,5 +1,6 @@
 import type { Notification } from "../notification.types";
 import UserAvatar from "./UserAvatar";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   notification: Notification;
@@ -18,7 +19,7 @@ export default function NotificationItem({
     message,
     timeAgo,
   } = notification;
-
+  const navigatte = useNavigate();
   return (
     <li
       className={`flex gap-4 py-6
@@ -34,30 +35,30 @@ export default function NotificationItem({
           <span className="font-medium text-neutral-900">
             {userName}
           </span>{" "}
-          {action === "commented" ? "Commented on your article:" : "liked your article:"}{" "}
-          <span className="text-neutral-700">
+          {action === "commented" ? "commented on your article" : "liked your article"}{" "}
+          <span className="text-neutral-700 font-medium">
             {articleTitle}
           </span>
         </p>
 
         {message && (
-          <p className="text-sm text-neutral-600">
-            “{message}”
+          <p className="text-sm text-neutral-600 italic">
+            "{message}"
           </p>
         )}
 
-        <p className="text-xs text-orange-400">
+        <p className="text-xs text-neutral-500">
           {timeAgo}
         </p>
       </div>
 
       {/* View */}
-      <a
-        href="#"
+      <button
+        onClick={() => navigatte(`/posts/${id}`)}
         className="self-start text-sm text-neutral-900 underline"
       >
         View
-      </a>
+      </button>
     </li>
   );
 }

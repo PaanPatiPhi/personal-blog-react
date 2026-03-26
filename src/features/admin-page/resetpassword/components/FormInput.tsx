@@ -2,12 +2,18 @@ interface Props {
   label: string;
   placeholder?: string;
   type?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 }
 
 export default function FormInput({
   label,
   placeholder,
   type = "text",
+  value,
+  onChange,
+  required = false,
 }: Props) {
   return (
     <div className="space-y-2">
@@ -18,6 +24,9 @@ export default function FormInput({
       <input
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
         className="
           w-full h-11 px-4
           text-sm

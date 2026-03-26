@@ -1,36 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import useGetCategories from "@/features/category/hooks/useGetCategories";
-import useCreatePost from "../hook/useCreatePost";
+import useGetPostById from "@/features/admin-page/hook/useGetPostById";
+import useCreatePost from "../../hook/useCreatePost";
+import useUpdatePost from "../../hook/useUpdatePost";
 import { supabase } from "@/lib/supabase";
-import imageIcon from "../../../assets/icon/admin-page/Img_box_light.png";
-import { useNavigate } from "react-router-dom";
+import imageIcon from "../../../../assets/icon/admin-page/Img_box_light.png";
+import Loading from "@/shared/layout/loading/Loading";
+import { useProfile } from "@/features/profile/contexts/profile-context.tsx";
 
-export default function CreateArticlePage() {
+type FormState = {
+  title: string;
+  category_id: number;
+  introduction: string;
+  content: string;
+  thumbnailUrl: string | null;
+  thumbnailFile: File | null;
+};
 
-  const { data: categories = [],isLoadingCat } = useGetCategories();
+type StatusType = "draft" | "published";
+
+export default function ArticleFormPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
+  
+  const { data: categories = [], isLoadingCat } = useGetCategories();
+  const { data: article, isLoading: isLoadingArticle } = useGetPostById(isEditMode ? Number(id) : undefined);
   const { createPost } = useCreatePost();
+  const { updatePost } = useUpdatePost();
+  const { profile } = useProfile();
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const navigate =useNavigate();
-
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     title: "",
     category_id: 0,
     introduction: "",
     content: "",
-    thumbnailUrl: null as string | null,
-    thumbnailFile: null as File | null,
+    thumbnailUrl: null,
+    thumbnailFile: null,
   });
-
-    type StatusType = "draft" | "published";
 
   const STATUS_MAP: Record<StatusType, number> = {
     draft: 1,
     published: 2,
   };
 
-  const uploadImage = async (file: File) => {
+  // ถ้า edit mode ให้ populate form ด้วยข้อมูล article เดิม
+  useEffect(() => {
+    if (article && isEditMode) {
+      setForm({
+        title: article.title || "",
+        category_id: article.category_id || 0,
+        introduction: article.introduction || "",
+        content: article.content || "",
+        thumbnailUrl: article.image || null,
+        thumbnailFile: null,
+      });
+    }
+  }, [article, isEditMode]);
 
+  const uploadImage = async (file: File) => {
     const filePath = `posts/${Date.now()}-${file.name}`;
 
     const { error } = await supabase.storage
@@ -47,47 +77,65 @@ export default function CreateArticlePage() {
   };
 
   const handleSubmit = async (status: StatusType) => {
+    // ป้องกัน double click
+    if (isSubmitting) return;
 
-  // ป้องกัน double click
-  if (isSubmitting) return;
+    try {
+      setIsSubmitting(true);
 
-  try {
-    setIsSubmitting(true);
+      let imageUrl = form.thumbnailUrl;
 
-    let imageUrl = form.thumbnailUrl;
+      // upload image ก่อน
+      if (form.thumbnailFile) {
+        imageUrl = await uploadImage(form.thumbnailFile);
+      }
 
-    // upload image ก่อน
-    if (form.thumbnailFile) {
-      imageUrl = await uploadImage(form.thumbnailFile);
+      const payload = {
+        title: form.title,
+        category_id: form.category_id,
+        description: form.introduction,
+        content: form.content,
+        image: imageUrl ?? "",
+        status_id: STATUS_MAP[status] as 1 | 2,
+      };
+
+      if (isEditMode && id) {
+        // Update mode
+        await updatePost(Number(id), {
+          title: payload.title,
+          category_id: payload.category_id,
+          description: payload.description,
+          content: payload.content,
+          image: payload.image,
+          status_id: STATUS_MAP[status] as 1 | 2,
+        });
+      } else {
+        // Create mode
+        await createPost(payload);
+      }
+
+      navigate("/admin/articles");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
+  const isLoading = isLoadingCat || (isEditMode && isLoadingArticle);
 
-    const payload = {
-      title: form.title,
-      category_id: form.category_id,
-      description: form.introduction,
-      content: form.content,
-      image: imageUrl ?? "",
-      status_id: STATUS_MAP[status],
-    };
-
-    await createPost(payload);
-
-    navigate("/admin/articles");
-
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setIsSubmitting(false);
+  if (isLoading) {
+    return <Loading />;
   }
-};
 
   return (
     <div className="max-w-full space-y-6 px-15">
 
       {/* Header */}
       <div className="flex items-center justify-between border-b pb-4">
-        <h1 className="text-xl font-semibold">Create article</h1>
+        <h1 className="text-xl font-semibold">
+          {isEditMode ? "Edit article" : "Create article"}
+        </h1>
 
         <div className="flex gap-3">
           <button
@@ -121,6 +169,12 @@ export default function CreateArticlePage() {
             {form.thumbnailFile ? (
               <img
                 src={URL.createObjectURL(form.thumbnailFile)}
+                alt="thumbnail preview"
+                className="h-[260px] w-[460px] object-cover"
+              />
+            ) : form.thumbnailUrl ? (
+              <img
+                src={form.thumbnailUrl}
                 alt="thumbnail preview"
                 className="h-[260px] w-[460px] object-cover"
               />
@@ -182,7 +236,7 @@ export default function CreateArticlePage() {
 
         <input
           disabled
-          value="Thompson P."
+          value={profile?.name || "Thompson P."}
           className="w-full rounded border bg-gray-100 px-4 py-2 mt-3 text-sm text-(--color-brown-400)"
         />
       </div>

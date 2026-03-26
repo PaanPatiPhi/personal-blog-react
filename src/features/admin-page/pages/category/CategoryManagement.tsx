@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
-
+import useGetCategories from "@/features/category/hooks/useGetCategories";
+import LoadingPage from "@/shared/layout/loading/Loading";
+import { api } from "@/lib/api";
+import Modal from "@/shared/Modal";
 
 /**
  * หน้า Category management
@@ -14,19 +17,23 @@ export default function CategoryManagement() {
   // state เก็บค่าค้นหา
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-
-  // mock data (ภายหลังค่อยเปลี่ยนเป็น fetch จาก API)
-  const categories = [
-    { id: 1, name: "Cat" },
-    { id: 2, name: "General" },
-    { id: 3, name: "Inspiration" },
-  ];
+  const { data, isLoadingCat } = useGetCategories();
+  const [open, setOpen] = useState(false);
 
   // filter category ตาม search
-  const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(search.toLowerCase())
+  const filteredCategories = data.filter((items) =>
+    items.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const handleDelete = async (id: number) => {
+    try {
+      await api.delete(`/categories/${id}`);
+      window.location.reload();
+    } catch (error) {
+      console.error("Delete failed", error);
+    }
+  };
+  if (isLoadingCat) return <LoadingPage />;
   return (
     <div className="space-y-6 px-15">
       {/* ===== Header ===== */}
@@ -34,8 +41,10 @@ export default function CategoryManagement() {
         <h1 className="text-xl font-semibold ">Category management</h1>
 
         {/* ปุ่มสร้าง category */}
-        <button className="flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm text-white"
-        onClick={() => navigate("/admin/categories/create")}>
+        <button
+          className="flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm text-white cursor-pointer"
+          onClick={() => navigate("/admin/categories/create")}
+        >
           <span className="text-lg leading-none">+</span>
           Create category
         </button>
@@ -82,9 +91,9 @@ export default function CategoryManagement() {
               <div className="flex gap-4 text-gray-500">
                 {/* edit */}
                 <button
-                  className="hover:text-black"
+                  className="hover:text-red-600 cursor-pointer"
                   onClick={() => {
-                    console.log("edit", cat.id);
+                    navigate(`/admin/categories/${cat.id}/edit`);
                   }}
                 >
                   <Pencil size={16} />
@@ -92,14 +101,33 @@ export default function CategoryManagement() {
 
                 {/* delete */}
                 <button
-                  className="hover:text-red-600"
-                  onClick={() => {
-                    console.log("delete", cat.id);
-                  }}
+                  className="hover:text-red-600 cursor-pointer"
+                  onClick={() => setOpen(true)}
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
+              <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                title="Delete Category"
+                message="Do you sure to delete this Category?"
+                rightText="Delete"
+                leftText="Cancel"
+                onRightClick={async () => {
+                  try {
+                    handleDelete(cat.id);
+                  } catch (error) {
+                    console.log(error);
+                  } finally {
+                    setOpen(false);
+                  }
+                }}
+                onLeftClick={() => {
+                  setOpen(false);
+                }}
+                type="secondary"
+              />
             </li>
           ))}
 

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { AuthProvider } from "@/features/auth/context/authentication";
+import { AuthProvider } from "@/features/auth/contexts/auth-provider";
 import LoginModal from "@/features/auth/components/LoginModal";
 import "./index.css";
 

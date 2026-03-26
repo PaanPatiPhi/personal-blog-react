@@ -1,33 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authentication";
+import { useAuth } from "../contexts/auth-provider";
 import Toast from "@/shared/components/Toast";
-
 
 function LoginPage() {
   const navigate = useNavigate();
-    const { userLogin } = useAuth();
+  const { userLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("");
+  const [toastDescription, setToastDescription] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error" | "info">(
+    "success",
+  );
 
-const [showToast, setShowToast] = useState(false);
-const [toastTitle, setToastTitle] = useState("");
-const [toastDescription, setToastDescription] = useState("");
-const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
-
-
-
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const data = {
       email,
-      password
-    }
+      password,
+    };
 
     // ✅ validation ขั้นต่ำ
     if (!email || !password) {
@@ -41,24 +38,36 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
     }
 
     setError("");
-    const success = userLogin(data);
-    console.log(success)
-    if (!success) {
-  setToastTitle("Invalid email or password");
-  setToastDescription("");
-  setToastType("error");
-  setShowToast(true);  
-    return;
-  }
+    try {
+      const res = await userLogin(data);
+      console.log("Login response:", res);
+      
+      // ✅ Success toast สำหรับ login สำเร็จ
+      setToastTitle("Login Successful");
+      setToastDescription("");
+      setToastType("success");
+      setShowToast(true);
+      
+      // ❌ Hide toast หลัง 3 วินาที
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    } catch (error) {
+      // ❌ Error toast สำหรับ login ไม่สำเร็จ
+      setToastTitle("Invalid email or password");
+      setToastDescription("Error: " + error);
+      setToastType("error");
+      setShowToast(true);
+      
+      // ❌ Hide toast หลัง 3 วินาที
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    }
 
-  setToastTitle("Login Successful");
-  setToastDescription("");
-  setToastType("success");
-  setShowToast(true);  
-
-  // setTimeout(() => {
-  //   navigate("/");
-  // }, 1000);
+    // setTimeout(() => {
+    //   navigate("/");
+    // }, 1000);
   };
 
   return (
@@ -67,9 +76,7 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
         onSubmit={handleSubmit}
         className="w-[343px] bg-(--color-brown-100) rounded-2xl p-6"
       >
-        <h1 className="text-2xl font-semibold text-center mb-6">
-          Log in
-        </h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">Log in</h1>
 
         {/* Email */}
         <label className="block text-sm mb-1">Email</label>
@@ -91,7 +98,7 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
             placeholder="Password"
             className="w-full px-4 py-3 rounded-xl border "
           />
-                    <button
+          <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500"
@@ -101,11 +108,7 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
         </div>
 
         {/* Error */}
-        {error && (
-          <p className="text-red-500 text-sm mb-3">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
         {/* Submit */}
         <button
@@ -126,12 +129,12 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
           </span>
         </p>
       </form>
-            <Toast
-  show={showToast}
-  title={toastTitle}
-  description={toastDescription}
-  type={toastType}
-/>
+      <Toast
+        show={showToast}
+        title={toastTitle}
+        description={toastDescription}
+        type={toastType}
+      />
     </div>
   );
 }

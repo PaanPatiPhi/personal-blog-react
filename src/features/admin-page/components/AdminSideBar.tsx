@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { adminMenu } from "../config/AdminMenu";
-import { useAuth } from "@/features/auth/context/authentication";
+import { useAuth } from "@/features/auth/contexts/auth-provider";
 
 
 const menuClass =
@@ -17,7 +17,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="max-w-[20%] w-[18vw] bg-[#f6f4f1] border-r min-h-screen pt-15 pb-6 flex flex-col border-none">
+    <aside className="max-w-[20%] w-[18vw] bg-[#f6f4f1] border-r min-h-screen h-full pt-15 pb-6 flex flex-col border-none sticky top-0">
       {/* Logo */}
       <div className="mb-10 px-6 flex flex-col space-y-5">
         <Link to="/" className="font-bold text-2xl">

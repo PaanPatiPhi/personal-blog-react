@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/features/auth/context/authentication";
+import { useAuth } from "@/features/auth/contexts/auth-provider";
 import { useProfile } from "@/features/profile/hooks/useProfile";
 
 // icon ต่าง ๆ
@@ -103,7 +103,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
           alt={profile?.name}
           className="w-8 h-8 rounded-full object-cover"
         />
-        <span>{user?.name}</span>
+        <span>{profile?.name || user?.email}</span>
       </button>
 
       {/* dropdown menu */}

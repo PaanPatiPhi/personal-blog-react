@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import hamburgerIcon from "../../../assets/icon/hamburger_bar.png";
-import { useAuth } from "@/features/auth/context/authentication";
+import { useAuth } from "@/features/auth/contexts/auth-provider";
 import GuestMenu from "./GuessMenu";
 import UserMenu from "./UserMenu";
+import NotificationDropdown from "@/features/admin-page/components/NotificationDropdown";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
 console.log("NavBar user:", isAuthenticated);
 
   return (
@@ -28,7 +29,8 @@ console.log("NavBar user:", isAuthenticated);
           </button>
 
           {/* desktop auth menu */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            {isAuthenticated && isAdmin && <NotificationDropdown />}
             {isAuthenticated ? <UserMenu /> : <GuestMenu />}
           </div>
         </div>

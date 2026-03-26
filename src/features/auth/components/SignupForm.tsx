@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SignupSuccess from "./SignupSuccess";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authentication.tsx"
+import { useAuth } from "../contexts/auth-provider";
 
 type SignupFormValues = {
   name: string;

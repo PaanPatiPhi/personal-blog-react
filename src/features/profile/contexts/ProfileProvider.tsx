@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
 import { ProfileContext } from "./profile-context.tsx";
+import { useAdminProfile } from "@/features/admin-page/hook/useAdminProfile";
+import { useUpdateAdminProfile } from "@/features/admin-page/hook/useUpdateAdminProfile";
 import type {
   ProfileData,
   UpdateProfilePayload,
@@ -16,60 +16,39 @@ export const ProfileProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { profile: adminProfile, loading } = useAdminProfile();
+  const { updateProfile: updateAdminProfile } = useUpdateAdminProfile();
 
-  /* ======================
-     Fetch profile
-  ====================== */
-  const fetchProfile = async () => {
-    try {
-      const res = await api.get("/me/profile");
-      setProfile(res.data);
-    } catch (err) {
-      console.error("Fetch profile error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /* โหลดครั้งแรกตอน mount */
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  // Transform admin profile to match ProfileData format
+  const profile: ProfileData | null = adminProfile ? {
+    id: adminProfile.id,
+    username: adminProfile.username,
+    name: adminProfile.name,
+    email: adminProfile.email || "",
+    profile_pic: adminProfile.profile_pic,
+    bio: adminProfile.bio,
+  } : null;
 
   /* ======================
      Update profile
-     หลัง update สำเร็จ → fetch ใหม่จาก server
   ====================== */
   const updateProfile = async (
     formValues: UpdateProfilePayload
   ) => {
-    const formData = new FormData();
+    if (!adminProfile) return;
 
-    if (formValues.username !== undefined) {
-      formData.append("username", formValues.username);
-    }
+    const updateData = {
+      name: formValues.name,
+      username: formValues.username,
+      bio: formValues.bio,
+      profile_pic: formValues.imageFile ? URL.createObjectURL(formValues.imageFile) : adminProfile.profile_pic || undefined,
+    };
 
-    if (formValues.name !== undefined) {
-      formData.append("name", formValues.name);
-    }
+    await updateAdminProfile(updateData);
+  };
 
-    if (formValues.imageFile) {
-      formData.append("imageFile", formValues.imageFile);
-    }
-
-    try {
-      await api.put("/me/profile", formData);
-
-      // 🔥 สำคัญ: ดึงข้อมูลใหม่จาก backend
-      const fresh = await api.get("/me/profile");
-
-      setProfile(fresh.data);
-    } catch (err) {
-      console.error("Update profile error:", err);
-      throw err;
-    }
+  const refetch = async () => {
+    // This will be handled by the useAdminProfile hook's refetch mechanism
   };
 
   return (
@@ -78,7 +57,7 @@ export const ProfileProvider = ({
         profile,
         loading,
         updateProfile,
-        refetch: fetchProfile,
+        refetch,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { useParams, useLocation} from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 import PostContent from "./PostContent";
@@ -11,7 +11,7 @@ import PostMeta from "./PostMeta";
 import CopySuccessToast from "@/shared/components/CopySuccessToast";
 
 
-import { useAuth } from "@/features/auth/context/authentication";
+import { useAuth } from "@/features/auth/contexts/auth-provider";
 import { usePost } from "../hooks/usePost";
 import { usePostActions } from "../hooks/usePostActions";
 import { useComments } from "../hooks/useComments";
@@ -20,38 +20,37 @@ function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
 
-
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showCopyToast, setShowCopyToast] = useState(false);
 
-
   const { post, loading, error } = usePost(id, location.state?.post);
-  const { comments, addComment } = useComments();
+  const { comments, refreshComments } = useComments(id);
+
+  const actions = usePostActions({
+    isLoggedIn: !!user,
+    onRequireLogin: () => setShowLoginModal(true),
+    title: post?.title || "",
+    postId: id || "",
+  });
 
   if (loading) return <div className="py-20 text-center">Loading...</div>;
   if (error || !post) return <div>Error loading post</div>;
 
   const handleCopyLink = async () => {
-  await navigator.clipboard.writeText(window.location.href);
-  setShowCopyToast(true);
+    await navigator.clipboard.writeText(window.location.href);
+    setShowCopyToast(true);
 
-  setTimeout(() => {
-    setShowCopyToast(false);
-  }, 2000);
-};
-const CATEGORY_MAP: Record<number, string> = {
-  1: "Cat",
-  2: "Inspiration",
-  3: "General"
-};
+    setTimeout(() => {
+      setShowCopyToast(false);
+    }, 2000);
+  };
 
-
-  const actions = usePostActions({
-    isLoggedIn: !!user,
-    onRequireLogin: () => setShowLoginModal(true),
-    title: post.title,
-  });
+  const CATEGORY_MAP: Record<number, string> = {
+    1: "Cat",
+    2: "Inspiration",
+    3: "General"
+  };
 
   return (
     <>
@@ -74,7 +73,7 @@ const CATEGORY_MAP: Record<number, string> = {
             <PostContent content={post.content} />
 
             <div className="lg:hidden">
-              <AuthorCard name={post.author} image={post.authorImage} bio="I am a pet enthusiast and freelance writer who specializes in animal behavior and care." />
+              <AuthorCard />
             </div>
 
             <PostActions
@@ -87,15 +86,21 @@ const CATEGORY_MAP: Record<number, string> = {
             />
           
 
-            <CommentInput onSubmit={addComment} />
+            <CommentInput postId={id} onCommentAdded={refreshComments} />
 
             {comments.map((c) => (
-              <CommentSection key={c.id} {...c} />
+              <CommentSection 
+                key={c.id} 
+                image={c.users?.profile_pic || c.profile_pic || '/default-avatar.png'}
+                name={c.users?.name || c.users?.username || c.username || 'Anonymous'}
+                date={c.created_at}
+                comment={c.comment_text}
+              />
             ))}
           </div>
 
           <aside className="hidden lg:block sticky top-24">
-            <AuthorCard name={post.author} image={post.authorImage} bio="I am a pet enthusiast and freelance writer who specializes in animal behavior and care." />
+            <AuthorCard />
           </aside>
         </div>
       </main>

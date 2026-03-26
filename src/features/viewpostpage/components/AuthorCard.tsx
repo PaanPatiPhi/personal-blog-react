@@ -1,12 +1,9 @@
 import DefaultAuthorImage from "../../../assets/image/authors/ThomsanP.png";
+import { useProfile } from "@/features/profile/contexts/profile-context.tsx";
 
-type AuthorCardProps = {
-  name: string;
-  image?: string;
-  bio?: string;
-};
+function AuthorCard() {
+  const { profile, loading } = useProfile();
 
-function AuthorCard({ name, image, bio }: AuthorCardProps) {
   return (
     <aside
       className="
@@ -15,24 +12,26 @@ function AuthorCard({ name, image, bio }: AuthorCardProps) {
         rounded-md py-6 px-6
         w-full
         md:sticky md:top-24
-        md:w-[305px] md:h-[400px]
+        md:w-[305px] md:h-[440px]
       "
     >
       <div className="flex w-full gap-3">
         <img
-          src={image || DefaultAuthorImage}
-          alt={name}
+          src={profile?.profile_pic || DefaultAuthorImage}
+          alt={profile?.name || "Author"}
           className="w-11 h-11 rounded-full object-cover"/>
         <div className="flex flex-col">
           <span>author</span>
-          <h4 className="text-[20px] font-semibold">{name}</h4>
+          <h4 className="text-[20px] font-semibold">
+            {loading ? "Loading..." : profile?.name || "Patiparn T."}
+          </h4>
         </div>
       </div>
 
       <hr className="w-full border-t border-(--color-brown-300)" />
 
       <p className="text-(length:--font-size-body-1)/[24px] text-(--color-brown-400) tracking-wide">
-        {bio}
+        {loading ? "Loading..." : profile?.bio || "I am a pet enthusiast and freelance writer who specializes in animal behavior and care."}
       </p>
     </aside>
   );

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "@/features/profile/contexts/profile-context.tsx";
 import DefaultAuthorImage from "../../../assets/image/authors/ThomsanP.png";
 
 
@@ -25,6 +26,7 @@ function BlogCard({
   date 
 }: BlogCardProps) {
   const navigate = useNavigate();
+  const { profile } = useProfile();
 
   const handleOpen = () => {
     // navigate ไปยังหน้า post พร้อมส่งข้อมูลผ่าน state เพื่อใช้ได้ทันที
@@ -41,6 +43,10 @@ function BlogCard({
   3: "General"
 };
 
+  // Use profile data if available, otherwise fall back to props
+  const displayName = profile?.name || author;
+  const displayImage = profile?.profile_pic || authorImage || DefaultAuthorImage;
+
   return (
     <div
       className="flex flex-col gap-4 group cursor-pointer"
@@ -53,7 +59,7 @@ function BlogCard({
       aria-label={`Open post ${title}`}
       key={id}
     >
-      <div className="overflow-hidden rounded-2xl aspect-[16/10]">
+      <div className="overflow-hidden rounded-2xl aspect-16/10">
         <img 
           src={image} 
           alt={title} 
@@ -81,12 +87,12 @@ function BlogCard({
         {/* ข้อมูลผู้เขียน */}
         <div className="flex items-center gap-3 mt-1">
           <img 
-            src={authorImage || DefaultAuthorImage}
-            alt={author} 
+            src={displayImage}
+            alt={displayName} 
             className="w-8 h-8 rounded-full object-cover"
           />
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-gray-700">{author}</span>
+            <span className="font-semibold text-gray-700">{displayName}</span>
             <span className="text-gray-400">•</span>
             <span className="text-gray-500">
             {date.split("T")[0]}

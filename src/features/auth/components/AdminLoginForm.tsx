@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authentication";
+import { useAuth } from "../contexts/auth-provider";
 import Toast from "@/shared/components/Toast";
 
 export default function AdminLoginForm() {

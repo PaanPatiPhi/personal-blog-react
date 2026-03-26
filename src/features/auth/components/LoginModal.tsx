@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/authentication";
+import { useAuth } from "../contexts/auth-provider";
 
 export default function LoginModal() {
-  const { loginModalOpen, closeLoginModal, login } = useAuth();
+  const { loginModalOpen, closeLoginModal, userLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,9 +15,10 @@ export default function LoginModal() {
     setLoading(true);
     setErr(null);
     try {
-      await login(email, password); // mock login
-    } catch (e: any) {
-      setErr(e?.message ?? "Login failed");
+      await userLogin({ email, password });
+    } catch (e: unknown) {
+      const error = e as Error;
+      setErr(error?.message ?? "Login failed");
     } finally {
       setLoading(false);
     }

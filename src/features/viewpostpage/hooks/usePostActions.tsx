@@ -1,18 +1,31 @@
+import { useAuth } from "@/features/auth/contexts/auth-provider";
+import { notifyNewLike } from "@/lib/notifications";
+
 export function usePostActions({
   isLoggedIn,
   onRequireLogin,
   title,
+  postId,
 }: {
   isLoggedIn: boolean;
   onRequireLogin: () => void;
   title: string;
+  postId: string;
 }) {
-  const handleLike = () => {
+  const { user } = useAuth();
+  
+  const handleLike = async () => {
     if (!isLoggedIn) {
       onRequireLogin();
       return;
     }
+    
     console.log("LIKE POST");
+    
+    // Send notification to admin
+    if (user) {
+      await notifyNewLike(postId, title, user.user_metadata?.name || user.email || "Anonymous");
+    }
   };
 
   const handleCopyLink = () => {

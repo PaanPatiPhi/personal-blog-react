@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "@/shared/components/Toast";
+import { useAdminProfile } from "../hook/useAdminProfile";
+import {useUpdateAdminProfile} from "../hook/useUpdateAdminProfile";
+import LoadingPage from "@/shared/layout/loading/Loading";
 
 /**
  * type สำหรับ form profile
@@ -10,27 +13,42 @@ type ProfileForm = {
   username: string;
   email: string;
   bio: string;
-  avatar: string; // url รูป profile
+  profile_pic: string; // url รูป profile (matching database field)
 };
 
 
+
 export default function ProfileManagement() {
-  /**
-   * state เก็บข้อมูล profile
-   * ปกติค่าพวกนี้ควรมาจาก API (GET /me)
-   */
+  const { profile, loading } = useAdminProfile();
+  const { updateProfile } = useUpdateAdminProfile();
+  const [showToast, setShowToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState("");
+  const [toastDescription, setToastDescription] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
+
+  // Initialize form with empty values - will be populated by API data
   const [form, setForm] = useState<ProfileForm>({
-    name: "Thompson P.",
-    username: "thompson",
-    email: "thompson.p@gmail.com",
-    bio: `I am a pet enthusiast and freelance writer who specializes in animal behavior and care.
-When i’m not writing, I spend time volunteering at my local animal shelter.`,
-    avatar: "https://i.pravatar.cc/150?img=3",
+    name: "",
+    username: "",
+    email: "",
+    bio: "",
+    profile_pic: "",
   });
-const [showToast, setShowToast] = useState(false);
-const [toastTitle, setToastTitle] = useState("");
-const [toastDescription, setToastDescription] = useState("");
-const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
+
+  // เมื่อ profile โหลดจาก Supabase ให้อัพเดท form
+  useEffect(() => {
+    if (profile && !loading) {
+      setForm({
+        name: profile.name || "",
+        username: profile.username || "",
+        email: profile.email || "",
+        bio: profile.bio || "",
+        profile_pic: profile.profile_pic || "",
+      });
+    }
+  }, [profile, loading]);
+
+  console.log("Profile from Supabase:", profile);
   /**
    * handle เปลี่ยนค่าฟอร์มแบบ generic
    * ลดการเขียน onChange ซ้ำ ๆ
@@ -52,24 +70,36 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
 
     // สร้าง url สำหรับ preview รูป
     const previewUrl = URL.createObjectURL(file);
-    setForm((prev) => ({ ...prev, avatar: previewUrl }));
+    setForm((prev) => ({ ...prev, profile_pic: previewUrl }));
   };
 
   /**
    * handle save profile
-   * จุดนี้ปกติจะเรียก API PUT /profile
+   * จุดนี้ปกติจะเรียก updateProfile จาก hook จริงๆ
    */
-
   const handleSave = async () => {
-  await navigator.clipboard.writeText(window.location.href);
-
-  setToastTitle("Saved profile");
-  setToastDescription("Your profile has been successfully created.");
-  setToastType("success");
-  setShowToast(true);
-
-  setTimeout(() => setShowToast(false), 2000);
-};
+    try {
+      await updateProfile(form);
+      
+      // Success feedback
+      setToastTitle("Profile updated successfully!");
+      setToastDescription("Your profile has been updated.");
+      setToastType("success");
+      setShowToast(true);
+      
+      // Hide toast after 3 seconds
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      // Error feedback
+      setToastTitle("Update failed");
+      setToastDescription(error.message || "Please try again.");
+      setToastType("error");
+      setShowToast(true);
+      
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  };
+if(loading) return <LoadingPage />
   return (
     <div className="space-y-6 px-15">
       {/* ===== Header ===== */}
@@ -87,7 +117,7 @@ const [toastType, setToastType] = useState<"success" | "error" | "info">("succes
       {/* ===== Avatar ===== */}
       <div className="flex items-center gap-6">
         <img
-          src={form.avatar}
+          src={form.profile_pic}
           alt="profile"
           className="h-24 w-24 rounded-full object-cover"
         />

@@ -1,6 +1,6 @@
 // features/profile/components/ResetPasswordForm.tsx
 import { useState } from "react";
-import { resetPassword } from "@/mock/mockProfileService";
+import { supabase } from "@/lib/supabase";
 import ConfirmResetModal from "./ConfirmResetModal"
 
 export default function ResetPasswordForm() {
@@ -19,15 +19,25 @@ export default function ResetPasswordForm() {
 
     try {
       setLoading(true);
-      await resetPassword({
-        currentPassword: current,
-        newPassword: next,
+      
+      const { error } = await supabase.auth.updateUser({
+        password: next
       });
+
+      if (error) {
+        throw error;
+      }
 
       setOpenConfirm(false);
       alert("Password updated");
-    } catch (e: any) {
-      setError(e.message);
+      
+      // Clear form
+      setCurrent("");
+      setNext("");
+      setConfirm("");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to update password";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

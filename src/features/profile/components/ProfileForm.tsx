@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useProfile } from "../hooks/useProfile";
+import { useAuth } from "@/features/auth/contexts/auth-provider";
 import LoadingPage from "@/shared/layout/loading/Loading";
 import avatar from "../../../assets/image/profile/avatar.png"
 import Toast from "@/shared/components/Toast";
 
-
-
 export default function ProfileForm() {
-  const { profile, loading: profileLoading, updateProfile} = useProfile();
+  const { profile, loading: profileLoading, updateProfile, refetch } = useProfile();
+  const { user } = useAuth();
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -31,7 +31,8 @@ export default function ProfileForm() {
   }, [profile]);
 
   if (profileLoading) return <LoadingPage />;
-  if (!profile) return <p>No profile</p>;
+  if (!user) return <p>Please login to view profile</p>;
+  if (!profile) return <p>No profile data found</p>;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -59,16 +60,25 @@ const handleSubmit = async (e: React.FormEvent) => {
       imageFile
     });
 
-
-     setToastTitle("Saved profile");
+    // Success
+    setToastTitle("Success");
     setToastDescription("Your profile has been successfully updated.");
     setToastType("success");
     setShowToast(true);
     setImageFile(null);
-    setTimeout(() => setShowToast(false), 2000);
+    
+    // Refetch profile to show updated data
+    await refetch?.();
+    
+    setTimeout(() => setShowToast(false), 3000);
 
   } catch (err) {
-    console.error(err);
+    console.error("Error updating profile:", err);
+    setToastTitle("Error");
+    setToastDescription("Failed to update profile. Please try again.");
+    setToastType("error");
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   } finally {
     setLoading(false);
   }

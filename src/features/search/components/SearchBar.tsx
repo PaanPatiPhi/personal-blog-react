@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useGetPost from "@/features/article/hook/useGetPost";
+import useSearchSuggestions from "../hook/useSearchSuggestions";
 import { Search } from "lucide-react";
 
 type SearchBarProps = {
   className?: string;
-  category: string; // required
+  category?: string; // optional for search suggestions
 };
 
 function SearchBar({ className, category }: SearchBarProps) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  // ถ้ามีการพิมพ์ ให้ดึงจากทุก category เพื่อไม่ให้ถูกกรองตาม category ปัจจุบัน
-  const fetchCategory = query.trim().length > 0 ? "" : category;
-  const { blogData = [] } = useGetPost({ category: fetchCategory, keyword: "" });
+  // Use the new search suggestions hook
+  const { suggestions } = useSearchSuggestions({ query, category });
 
   // debounce local query for suggestions (UI only)
   const [debounced, setDebounced] = useState(query);
@@ -27,7 +26,7 @@ function SearchBar({ className, category }: SearchBarProps) {
 
   const results =
     q.length > 0
-      ? blogData.filter((blog) => {
+      ? suggestions.filter((blog) => {
           const title = blog.title?.toLowerCase() ?? "";
           const desc = blog.description?.toLowerCase() ?? "";
           return title.includes(q) || desc.includes(q);
@@ -52,7 +51,6 @@ function SearchBar({ className, category }: SearchBarProps) {
               key={blog.id}
               className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                // navigate ไปหน้า ViewPostPage พร้อมส่ง state ของ post
                 navigate(`/posts/${blog.id}`, { state: { post: blog } });
                 setQuery("");
               }}

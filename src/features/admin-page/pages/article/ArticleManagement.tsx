@@ -1,11 +1,11 @@
 import { Pencil, Trash2 } from "lucide-react";
-import useGetPost from "@/features/article/hook/useGetPost";
 import { useNavigate } from "react-router-dom";
 import useGetCategories from "@/features/category/hooks/useGetCategories";
 import LoadingPage from "@/shared/layout/loading/Loading";
 import Modal from "@/shared/Modal";
 import { useState } from "react";
 import { api } from "@/lib/api";
+import useGetPost from "@/features/article/hooks/useGetPost";
 
 export default function ArticleManagement() {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ export default function ArticleManagement() {
   const [selected, setSelected] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const CATEGORY_MAP = data.reduce<Record<number, string>>((acc, category) => {
     acc[category.id] = category.name;
@@ -44,14 +45,17 @@ export default function ArticleManagement() {
 
   const handleDelete = async (id: number) => {
     try {
+      setLoading(true);
       await api.delete(`/posts/${id}`);
       window.location.reload();
     } catch (error) {
       console.error("Delete failed", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (isLoading) return <LoadingPage />;
+  if (loading) return <LoadingPage />;
   return (
     <div className="space-y-6 px-15">
       {/* Header */}

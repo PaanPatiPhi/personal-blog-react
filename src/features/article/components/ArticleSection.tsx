@@ -1,36 +1,46 @@
 import BlogCard from "./BlogCard";
-import useGetPost from "../hook/useGetPost";
+import useGetPublishedPost from "../hooks/useGetPublishedPost";
 
 type ArticleSectionProps = {
   category: string;
-  keyword?: string; // ยังคงรับได้แต่จะไม่ถูกใช้ที่นี่
 };
 
 function ArticleSection({ category }: ArticleSectionProps) {
-  const { blogData, isLoading, isError, handleLoadMore, hasMore } =
-    useGetPost({ category, keyword: "" }); // ส่ง keyword เป็น empty ให้ API (search ไม่ใช้ที่นี่)
+  const { blogData, isLoading, isError, handleLoadMore, hasMore } = useGetPublishedPost({
+    category,
+    keyword: "", // ไม่มี search filtering
+  });
 
   // debug logs (เอาออกได้ถ้าต้องการ)
   console.log("ArticleSection category:", category);
   console.log("ArticleSection blogData length:", blogData?.length);
 
   if (isLoading && (!blogData || blogData.length === 0)) {
-    return <div className="py-20 text-center text-gray-400">Loading articles...</div>;
+    return (
+      <div className="py-20 text-center text-gray-400">Loading articles...</div>
+    );
   }
 
   if (isError) {
-    return <div className="py-20 text-center text-red-500">Failed to load articles</div>;
+    return (
+      <div className="py-20 text-center text-red-500">
+        Failed to load articles
+      </div>
+    );
   }
 
-  // filter by category only (Highlight => all)
-  const filteredBlogs =
-    category === "Highlight" ? blogData : blogData.filter((b) => b.category === category);
+  // API ทำการ filter ให้แล้ว ไม่ต้อง filter ซ้ำ
+  // ถ้า category เป็น "Highlight" จะแสดงทั้งหมด
+  const displayBlogs = blogData;
+  console.log("blogData", blogData);
+  console.log("category", category);
+  console.log("displayBlogs", displayBlogs);
 
   return (
     <article>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 w-full max-w-[1200px] mx-auto py-10 px-4">
-        {filteredBlogs.length > 0 ? (
-          filteredBlogs.map((blog) => <BlogCard key={blog.id} {...blog} />)
+        {displayBlogs.length > 0 ? (
+          displayBlogs.map((blog) => <BlogCard key={blog.id} {...blog} />)
         ) : (
           <div className="col-span-full text-center py-20 text-gray-400">
             No articles found.
