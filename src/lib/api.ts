@@ -6,7 +6,7 @@ import { supabase } from "./supabase";
  * ทุก request จะผ่านตัวนี้
  */
 export const api = axios.create({
-  baseURL: "http://localhost:4002",
+  baseURL: "https://blog-api-six-chi.vercel.app",
 });
 
 /**

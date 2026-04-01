@@ -78,7 +78,7 @@ function CreatePostComponent() {
 
     try {
       await axios.post(
-        "http://localhost:4000/api/posts",
+        "https://blog-api-six-chi.vercel.app/api/posts",
         formData,
         {
           headers: {

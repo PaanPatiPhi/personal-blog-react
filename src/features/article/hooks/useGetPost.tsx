@@ -54,7 +54,7 @@ function useGetPost({ category, keyword }: UseGetPostParams) {
 
     try {
       const res = await axios.get(
-        "http://localhost:4002/posts",
+        "https://blog-api-six-chi.vercel.app/posts",
         {
           params: {
             page,

@@ -85,7 +85,7 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
 
       // ========== API CALL ==========
       const res = await axios.get(
-        "http://localhost:4002/posts/published",
+        "https://blog-api-six-chi.vercel.app/posts/published",
         { params }
       );
 

@@ -77,7 +77,7 @@ export function usePost(id?: string) {
     setError(false);
 
     axios
-      .get(`http://localhost:4002/posts/${id}`)
+      .get(`https://blog-api-six-chi.vercel.app/posts/${id}`)
       .then((res) => {
         if (!cancelled) {
           const data = res.data.posts ?? res.data; // กัน API shape

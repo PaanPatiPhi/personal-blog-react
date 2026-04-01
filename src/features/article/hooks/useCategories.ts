@@ -15,7 +15,7 @@ function useCategories() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:4002/categories");
+        const response = await axios.get("https://blog-api-six-chi.vercel.app/categories");
         // Clean category names by removing newlines and extra whitespace
         const cleanedCategories = response.data.map((cat: { id: number; name: string }) => ({
           ...cat,
