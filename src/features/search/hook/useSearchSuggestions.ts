@@ -18,7 +18,7 @@ interface UseSearchSuggestionsProps {
   category?: string;
 }
 
-function useSearchSuggestions({ query, category }: UseSearchSuggestionsProps) {
+function useSearchSuggestions({ query }: UseSearchSuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

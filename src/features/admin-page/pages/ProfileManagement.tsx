@@ -92,7 +92,7 @@ export default function ProfileManagement() {
     } catch (error) {
       // Error feedback
       setToastTitle("Update failed");
-      setToastDescription(error.message || "Please try again.");
+      setToastDescription((error as Error).message || "Please try again.");
       setToastType("error");
       setShowToast(true);
       

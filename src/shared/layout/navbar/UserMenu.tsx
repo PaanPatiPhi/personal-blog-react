@@ -8,6 +8,8 @@ import profileIcon from "../../../assets/icon/NavBar/User_duotone.png";
 import resetPasswordIcon from "../../../assets/icon/NavBar/Refresh_light.png";
 import logoutIcon from "../../../assets/icon/NavBar/Sign_out_squre_light.png";
 import avatar from "../../../assets/image/profile/avatar.png"
+import notification_bell from "../../../assets/icon/NavBar/notification_bell_icon.svg"
+import Expand_down_light from "../../../assets/icon/NavBar/Expand_down_light.svg"
 
 
 /**
@@ -58,11 +60,16 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
   if (mobile) {
     return (
       <div className="flex flex-col gap-2">
+        {isAdmin && (
+          <button className="flex items-center justify-center rounded-full border border-(--color-blown-200)">
+            <img src={notification_bell} alt="notification" />
+          </button>
+        )}
         <button
           className="w-full text-left px-4 py-2 flex gap-3"
           onClick={() => handleNavigate("/profile?tab=profile")}
         >
-          <img src={profileIcon} alt="" />
+          <img src={profileIcon} alt="profile icon" />
           Profile
         </button>
 
@@ -70,7 +77,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
           className="w-full text-left px-4 py-2 flex gap-3"
           onClick={() => handleNavigate("/profile?tab=password")}
         >
-          <img src={resetPasswordIcon} alt="" />
+          <img src={resetPasswordIcon} alt="reset password icon" />
           Reset password
         </button>
 
@@ -80,7 +87,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
           className="w-full text-left px-4 py-2 flex gap-3"
           onClick={handleLogout}
         >
-          <img src={logoutIcon} alt="" />
+          <img src={logoutIcon} alt="logout icon" />
           Log out
         </button>
       </div>
@@ -94,17 +101,20 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
   return (
     <div className="relative">
       {/* ปุ่ม avatar + name */}
-      <button
-        className="flex items-center gap-2"
-        onClick={() => setOpen(!open)}
-      >
-        <img
+      <div className="flex items-center gap-2">
+              <img
           src={profile?.profile_pic || avatar}
           alt={profile?.name}
           className="w-8 h-8 rounded-full object-cover"
         />
         <span>{profile?.name || user?.email}</span>
+      <button
+        className="w-4 h-4 cursor-pointer text-sm"
+        onClick={() => setOpen(!open)}
+      >
+        <img src={Expand_down_light} alt="expand down icon" className="w-4 h-4" />
       </button>
+      </div>
 
       {/* dropdown menu */}
       {open && (
@@ -120,7 +130,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
               }
             }}
           >
-            <img src={profileIcon} alt="" />
+            <img src={profileIcon} alt="profile icon" />
             Profile
           </button>
 
@@ -132,7 +142,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
               }
               else{handleNavigate("/profile?tab=password")}}}
           >
-            <img src={resetPasswordIcon} alt="" />
+            <img src={resetPasswordIcon} alt="reset password icon" />
             Reset password
           </button>
 
@@ -142,7 +152,7 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
             className="w-full text-left px-4 py-2 flex gap-3"
             onClick={handleLogout}
           >
-            <img src={logoutIcon} alt="" />
+            <img src={logoutIcon} alt="logout icon" />
             Log out
           </button>
         </div>

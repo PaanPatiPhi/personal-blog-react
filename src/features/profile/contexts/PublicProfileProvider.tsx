@@ -28,7 +28,7 @@ export const PublicProfileProvider = ({
   } : null;
 
   const updateProfile = async (
-    formValues: UpdateProfilePayload
+    _formValues: UpdateProfilePayload
   ) => {
     // Public profile provider doesn't support updates
     throw new Error("Cannot update profile in public mode");

@@ -1,10 +1,30 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../hooks/useNotifications";
-import { Bell, CheckCircle } from "lucide-react";
+import { Bell } from "lucide-react";
+import type { Notification } from "../notifications/notification.types";
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const navigate = useNavigate();
+  const { notifications, unreadCount, markAsRead} = useNotifications();
+  console.log(notifications)
+
+  const handleNotificationClick = async (notification: Notification) => {
+    // Mark as read
+    if (!notification.is_read) {
+      await markAsRead(notification.id);
+    }
+    
+    // Navigate to article - try multiple field names
+    const articleId = notification.article_id;
+    if (articleId) {
+      navigate(`/posts/${articleId}`);
+    }
+    
+    // Close dropdown
+    setIsOpen(false);
+  };
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -17,27 +37,15 @@ export default function NotificationDropdown() {
     return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case 'comment':
-        return '💬';
-      case 'like':
-        return '❤️';
-      default:
-        return '🔔';
-    }
-  };
-
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="relative p-2 hover:bg-gray-100 transition-colors rounded-4xl border border-(--color-brown-200) text-(--color-brown-400) bg-white cursor-pointer"
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
+          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-2 h-2 flex items-center justify-center">
           </span>
         )}
       </button>
@@ -49,18 +57,6 @@ export default function NotificationDropdown() {
             onClick={() => setIsOpen(false)}
           />
           <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border z-20 max-h-96 overflow-hidden">
-            <div className="p-4 border-b flex items-center justify-between">
-              <h3 className="font-semibold">Notifications</h3>
-              {unreadCount > 0 && (
-                <button
-                  onClick={markAllAsRead}
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
-                >
-                  <CheckCircle size={14} />
-                  Mark all read
-                </button>
-              )}
-            </div>
 
             <div className="max-h-64 overflow-y-auto">
               {notifications.length === 0 ? (
@@ -74,15 +70,27 @@ export default function NotificationDropdown() {
                     className={`p-3 border-b hover:bg-gray-50 cursor-pointer ${
                       !notification.is_read ? 'bg-blue-50' : ''
                     }`}
-                    onClick={() => !notification.is_read && markAsRead(notification.id)}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-lg">{getNotificationIcon(notification.type)}</span>
+                      {notification.profile_pic || notification.avatarUrl ? (
+                        <img 
+                          src={notification.profile_pic || notification.avatarUrl} 
+                          alt={notification.userName}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-xs text-gray-600">
+                            {notification.userName?.charAt(0)?.toUpperCase() || '?'}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-900">{notification.message}</p>
-                        {notification.article_title && (
+                        {notification.articleTitle && (
                           <p className="text-xs text-gray-500 truncate">
-                            Post: {notification.article_title}
+                            Post: {notification.articleTitle}
                           </p>
                         )}
                         <p className="text-xs text-gray-400 mt-1">

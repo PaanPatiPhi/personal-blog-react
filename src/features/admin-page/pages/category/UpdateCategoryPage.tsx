@@ -34,7 +34,8 @@ export default function UpdateCategoryPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateCategory(categoryId,{
+      await updateCategory(categoryId!,{
+        id: categoryId!,
         name: categoryName,
       });
       setToastTitle("Saved Category");

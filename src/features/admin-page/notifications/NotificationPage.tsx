@@ -1,21 +1,20 @@
 import NotificationList from "./components/NotificationList";
-import type { Notification } from "../hooks/useNotifications";
 import { useNotifications } from "../hooks/useNotifications";
-
-
 
 export default function NotificationPage() {
   const { notifications, loading } = useNotifications();
 
   // Map API response to Notification type
   const mappedNotifications = Array.isArray(notifications) ? notifications.map((notif) => ({
-    id: parseInt(notif.id),
-    userName: notif.username || "Anonymous",
-    avatarUrl: notif.profile_pic || undefined,
-    action: notif.type === 'comment' ? 'commented' as const : 'liked' as const,
-    articleTitle: notif.article_title || "Unknown Article",
-    message: notif.comment_content || notif.message,
-    timeAgo: notif.created_at,
+    id: notif.id,
+    userName: notif.userName || "Anonymous",
+    avatarUrl: notif.avatarUrl || notif.profile_pic || undefined,
+    action: notif.action || 'commented' as const,
+    articleTitle: notif.articleTitle || "Unknown Article",
+    message: notif.message,
+    timeAgo: notif.timeAgo,
+    created_at: notif.created_at,
+    is_read: notif.is_read,
   })) : [];
 
   if (loading) {

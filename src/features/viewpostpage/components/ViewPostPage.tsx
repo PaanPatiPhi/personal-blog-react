@@ -1,38 +1,29 @@
-import { useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
-
-import PostContent from "./PostContent";
-import AuthorCard from "./AuthorCard";
-import PostActions from "./PostActions";
-import CommentInput from "./CommentInput";
-import CommentSection from "./CommentSection";
-import LoginModal from "../../auth/components/LoginModal";
-import PostMeta from "./PostMeta";
-import CopySuccessToast from "@/shared/components/CopySuccessToast";
-
-
+import { useParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/contexts/auth-provider";
 import { usePost } from "../hooks/usePost";
-import { usePostActions } from "../hooks/usePostActions";
 import { useComments } from "../hooks/useComments";
+import { usePostLikes } from "../hooks/usePostLikes";
+import CommentInput from "./CommentInput";
+import CommentSection from "./CommentSection";
+import PostActions from "./PostActions";
+import PostContent from "./PostContent";
+import AuthorCard from "./AuthorCard";
+import LoginModal from "@/features/auth/LoginModal";
+import CopySuccessToast from "@/shared/components/CopySuccessToast";
+import PostMeta from "./PostMeta";
 
 function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
 
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showCopyToast, setShowCopyToast] = useState(false);
 
-  const { post, loading, error } = usePost(id, location.state?.post);
+  const { post, loading, error } = usePost(id);
+  console.log(post)
   const { comments, refreshComments } = useComments(id);
-
-  const actions = usePostActions({
-    isLoggedIn: !!user,
-    onRequireLogin: () => setShowLoginModal(true),
-    title: post?.title || "",
-    postId: id || "",
-  });
+  const { likes, isLiked, toggleLike, loading: likeLoading } = usePostLikes(id);
 
   if (loading) return <div className="py-20 text-center">Loading...</div>;
   if (error || !post) return <div>Error loading post</div>;
@@ -77,22 +68,26 @@ function ViewPostPage() {
             </div>
 
             <PostActions
-            likes={post.likes}
-            onLike={actions.handleLike}
+            likes={likes}
+            isLiked={isLiked}
+            isLoggedIn={!!user}
+            onLike={toggleLike}
+            onRequireLogin={() => setShowLoginModal(true)}
+            loading={likeLoading}
             onCopyLink={handleCopyLink}
-            onShareFacebook={actions.handleShareFacebook}
-            onShareLinkedIn={actions.handleShareLinkedIn}
-            onShareTwitter={actions.handleShareTwitter}
+            onShareFacebook={() => console.log("Share Facebook")}
+            onShareLinkedIn={() => console.log("Share LinkedIn")}
+            onShareTwitter={() => console.log("Share Twitter")}
             />
           
 
-            <CommentInput postId={id} onCommentAdded={refreshComments} />
+            <CommentInput postId={id || ''} onCommentAdded={refreshComments} />
 
             {comments.map((c) => (
               <CommentSection 
                 key={c.id} 
-                image={c.users?.profile_pic || c.profile_pic || '/default-avatar.png'}
-                name={c.users?.name || c.users?.username || c.username || 'Anonymous'}
+                image={c.users?.profile_pic || '/default-avatar.png'}
+                name={c.users?.name || c.users?.username || 'Anonymous'}
                 date={c.created_at}
                 comment={c.comment_text}
               />

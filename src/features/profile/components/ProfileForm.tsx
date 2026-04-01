@@ -97,7 +97,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="border px-7 py-2 rounded-full text-sm bg-white"
+          className="border px-7 py-2 rounded-full text-sm bg-white cursor-pointer"
         >
           Upload profile picture
         </button>
@@ -131,7 +131,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       <button
         type="submit"
         disabled={loading}
-        className="mt-4 bg-black text-white px-8 py-2 rounded-full"
+        className="mt-4 bg-black text-white px-8 py-2 rounded-full cursor-pointer"
       >
         {loading ? "Saving..." : "Save"}
       </button>

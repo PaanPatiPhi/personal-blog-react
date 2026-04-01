@@ -9,7 +9,7 @@ import useGetPost from "@/features/article/hooks/useGetPost";
 
 export default function ArticleManagement() {
   const navigate = useNavigate();
-  const { blogData, isLoading } = useGetPost({ keyword: "" });
+  const { blogData } = useGetPost({ keyword: "" });
   const { data } = useGetCategories();
   const [searchTerm, setSearchTerm] = useState("");
   const [selected, setSelected] = useState("");

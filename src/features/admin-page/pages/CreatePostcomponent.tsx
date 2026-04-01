@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ interface ImageFile {
   file: File;
 }
 
-function CreatePostComponent(): JSX.Element {
+function CreatePostComponent() {
   const navigate = useNavigate();
 
   const [post, setPost] = useState<Post>({

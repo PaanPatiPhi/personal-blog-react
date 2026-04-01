@@ -24,7 +24,7 @@ function LoginModal({ open, onClose }: LoginModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/50 cursor-pointer"
         onClick={onClose}
       />
 
@@ -32,7 +32,7 @@ function LoginModal({ open, onClose }: LoginModalProps) {
       <div className="relative bg-white w-[343px] rounded-2xl p-6 z-10">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500"
+          className="absolute right-4 top-4 text-gray-500 cursor-pointer"
         >
           ✕
         </button>
@@ -43,7 +43,7 @@ function LoginModal({ open, onClose }: LoginModalProps) {
 
         <button
           onClick={goToSignup}
-          className="w-full bg-black text-white rounded-full py-3 mb-4"
+          className="w-full bg-black text-white rounded-full py-3 mb-4 cursor-pointer"
         >
           Create account
         </button>
@@ -52,7 +52,7 @@ function LoginModal({ open, onClose }: LoginModalProps) {
           Already have an account?{" "}
           <button
             onClick={goToLogin}
-            className="underline"
+            className="underline cursor-pointer"
           >
             Log in
           </button>

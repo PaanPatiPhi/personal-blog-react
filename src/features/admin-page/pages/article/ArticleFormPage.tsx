@@ -52,7 +52,7 @@ export default function ArticleFormPage() {
       setForm({
         title: article.title || "",
         category_id: article.category_id || 0,
-        introduction: article.introduction || "",
+        introduction: (article as any).introduction || "",
         content: article.content || "",
         thumbnailUrl: article.image || null,
         thumbnailFile: null,

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import SignupSuccess from "../components/SignupSuccess";
 import { supabaseAuth } from "@/lib/supabaseAuth";
 import toast from "react-hot-toast";
+import { api } from "@/lib/api";
 import type {
   UserProfile,
   AuthState,
@@ -57,7 +58,11 @@ useEffect(() => {
         const userProfile: UserProfile = {
           id: session.user.id,
           email: session.user.email || '',
-          user_metadata: session.user.user_metadata as UserProfile['user_metadata'],
+          user_metadata: {
+            ...session.user.user_metadata,
+            // Add default role if not present
+            role: (session.user.user_metadata as { role?: string })?.role || 'user'
+          } as UserProfile['user_metadata'],
         };
         
         setState({
@@ -177,7 +182,11 @@ useEffect(() => {
         const userProfile: UserProfile = {
           id: result.user.id,
           email: result.user.email || '',
-          user_metadata: result.user.user_metadata as UserProfile['user_metadata'],
+          user_metadata: {
+            ...result.user.user_metadata,
+            // Add default role if not present
+            role: (result.user.user_metadata as { role?: string })?.role || 'user'
+          } as UserProfile['user_metadata'],
         };
       
         // Check if user has admin role
@@ -270,7 +279,38 @@ useEffect(() => {
   const isAuthenticated = Boolean(state.user);
 
   // เช็คว่า admin
-  const isAdmin = Boolean(state.user?.role === "admin");
+  const isAdmin = Boolean(user?.user_metadata?.role === "admin");
+  
+  // ถ้าไม่มี role ใน metadata ให้ตรวจสอบผ่าน API
+  const [isAdminFromAPI, setIsAdminFromAPI] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      if (user?.id && !user?.user_metadata?.role) {
+        try {
+          const response = await api.get(`/users/${user.id}/role`);
+          const userRole = response.data?.role;
+          setIsAdminFromAPI(userRole === 'admin');
+        } catch (error) {
+          setIsAdminFromAPI(false);
+          console.log(error)
+        }
+      } else if (user?.user_metadata?.role) {
+        // มี role ใน metadata ใช้เลย
+        setIsAdminFromAPI(user?.user_metadata?.role === 'admin');
+      }
+    };
+    
+    checkAdminRole();
+  }, [user?.id, user?.user_metadata?.role]);
+  
+  // ใช้ค่าจาก API ถ้ามี ไม่ใช้ค่าจาก metadata
+  const finalIsAdmin = isAdminFromAPI !== null ? isAdminFromAPI : isAdmin;
+  
+  console.log("User profile:", user);
+  console.log("User metadata:", user?.user_metadata);
+  console.log("Is admin:", finalIsAdmin);
+  console.log("Role check:", user?.user_metadata?.role);
   /* ======================
      Provider Value
      ====================== */
@@ -286,9 +326,8 @@ useEffect(() => {
         logout,
 
         isAuthenticated,
-        isAdmin,
+        isAdmin: finalIsAdmin, // ใช้ค่าจาก API หรือ metadata
         
-
         loginModalOpen,
         openLoginModal: () => setLoginModalOpen(true),
         closeLoginModal: () => setLoginModalOpen(false),

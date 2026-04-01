@@ -1,21 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
-
-export type Notification = {
-  id: string;
-  recipient_id: string;
-  sender_id: string;
-  type: 'comment' | 'like';
-  message: string;
-  related_id?: string;
-  is_read: boolean;
-  created_at: string;
-  read_at?: string;
-  username?: string;
-  profile_pic?: string;
-  article_title?: string;
-  comment_content?: string;
-};
+import type { Notification } from "../notifications/notification.types";
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -27,12 +12,15 @@ export function useNotifications() {
       setLoading(true);
       const response = await api.get('/notifications');
       const notificationsData = response.data.data || [];
-      console.log(response)
+      console.log("Notifications API response:", response.data);
+      console.log("Notifications data:", notificationsData);
       
       // Ensure notificationsData is an array
       const notificationsArray = Array.isArray(notificationsData) ? notificationsData : [];
       
-      setNotifications(notificationsArray);
+      // Filter only unread notifications for dropdown
+      const unreadNotifications = notificationsArray.filter((n: Notification) => !n.is_read);
+      setNotifications(unreadNotifications);
       
       const unread = notificationsArray.filter((n: Notification) => !n.is_read).length || 0;
       setUnreadCount(unread);
@@ -43,12 +31,15 @@ export function useNotifications() {
     }
   };
 
-  const markAsRead = async (notificationId: string) => {
+  const markAsRead = async (notificationId: number) => {
     try {
       await api.patch(`/notifications/${notificationId}/read`);
-      setNotifications(prev => 
-        prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
+      
+      // Remove from unread notifications (dropdown)
+      setNotifications((prev: Notification[]) => 
+        prev.filter((n: Notification) => n.id !== notificationId)
       );
+      
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
       console.error('Error marking notification as read:', error);
@@ -58,7 +49,10 @@ export function useNotifications() {
   const markAllAsRead = async () => {
     try {
       await api.patch('/notifications/read-all');
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      
+      // Clear unread notifications (dropdown)
+      setNotifications([]);
+      
       setUnreadCount(0);
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
