@@ -8,7 +8,6 @@ export default function ResetPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const handleResetPassword = async () => {
@@ -28,7 +27,6 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      setLoading(true);
       setError("");
       
       const { error } = await supabase.auth.updateUser({
@@ -49,8 +47,6 @@ export default function ResetPasswordPage() {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Failed to reset password";
       setError(errorMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -136,7 +132,6 @@ export default function ResetPasswordPage() {
           setError("");
         }}
         onConfirm={handleResetPassword}
-        loading={loading}
       />
     </div>
   );

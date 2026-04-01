@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabase";
 import ConfirmResetModal from "./ConfirmResetModal"
 
 export default function ResetPasswordForm() {
-  const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +31,6 @@ export default function ResetPasswordForm() {
       alert("Password updated");
       
       // Clear form
-      setCurrent("");
       setNext("");
       setConfirm("");
     } catch (error: unknown) {
@@ -46,14 +44,6 @@ export default function ResetPasswordForm() {
   return (
     <>
       <div className="bg-(--color-brown-200) p-10 rounded-2xl w-[550px] gap-2 flex flex-col">
-        <p>Current password</p>
-        <input
-          type="password"
-          placeholder="Current password"
-          className="w-full mb-3 p-2 rounded bg-white"
-          onChange={(e) => setCurrent(e.target.value)}
-        />
-
         <p>New password</p>
         <input
           type="password"

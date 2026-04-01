@@ -40,7 +40,19 @@ function ArticleSection({ category }: ArticleSectionProps) {
     <article>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 w-full max-w-[1200px] mx-auto py-10 px-4">
         {displayBlogs.length > 0 ? (
-          displayBlogs.map((blog) => <BlogCard key={blog.id} {...blog} />)
+          displayBlogs.map((blog) => (
+            <BlogCard 
+              key={blog.id} 
+              id={blog.id}
+              title={blog.title}
+              description={blog.description}
+              image={blog.image}
+              category_id={0}
+              author={blog.category_name || "Unknown"}
+              authorImage={blog.image}
+              date={blog.date}
+            />
+          ))
         ) : (
           <div className="col-span-full text-center py-20 text-gray-400">
             No articles found.
