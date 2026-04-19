@@ -7,10 +7,9 @@ import { useProfile } from "@/features/profile/hooks/useProfile";
 import profileIcon from "../../../assets/icon/NavBar/User_duotone.png";
 import resetPasswordIcon from "../../../assets/icon/NavBar/Refresh_light.png";
 import logoutIcon from "../../../assets/icon/NavBar/Sign_out_squre_light.png";
-import avatar from "../../../assets/image/profile/avatar.png"
-import notification_bell from "../../../assets/icon/NavBar/notification_bell_icon.svg"
-import Expand_down_light from "../../../assets/icon/NavBar/Expand_down_light.svg"
-
+import avatar from "../../../assets/image/profile/avatar.png";
+import notification_bell from "../../../assets/icon/NavBar/notification_bell_icon.svg";
+import Expand_down_light from "../../../assets/icon/NavBar/Expand_down_light.svg";
 
 /**
  * Props ของ UserMenu
@@ -24,7 +23,7 @@ type UserMenuProps = {
 
 function UserMenu({ mobile = false, onClose }: UserMenuProps) {
   // ดึง user และ logout function จาก auth context
-  const { user, logout,isAdmin } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
 
   // state สำหรับ desktop dropdown (mobile ไม่ใช้)
   const [open, setOpen] = useState(false);
@@ -36,9 +35,9 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
    * logout + ปิด menu + redirect
    */
   const handleLogout = () => {
-    logout();        // ล้าง auth state + localStorage
-    onClose?.();     // ปิด mobile menu (ถ้ามี)
-    navigate("/");   // กลับหน้าแรก
+    logout(); // ล้าง auth state + localStorage
+    onClose?.(); // ปิด mobile menu (ถ้ามี)
+    navigate("/"); // กลับหน้าแรก
   };
 
   /**
@@ -48,10 +47,13 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
    */
   const handleNavigate = (path: string) => {
     navigate(path);
-    setOpen(false);  // ปิด desktop dropdown
-    onClose?.();     // ปิด mobile menu
+    setOpen(false); // ปิด desktop dropdown
+    onClose?.(); // ปิด mobile menu
   };
-    const profile = useProfile().profile as { name?: string; profile_pic?: string } | null;
+  const profile = useProfile().profile as {
+    name?: string;
+    profile_pic?: string;
+  } | null;
 
   // ===============================
   // ===== Mobile version ==========
@@ -102,18 +104,22 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
     <div className="relative">
       {/* ปุ่ม avatar + name */}
       <div className="flex items-center gap-2">
-              <img
-          src={profile?.profile_pic || avatar}
-          alt={profile?.name}
-          className="w-8 h-8 rounded-full object-cover"
-        />
-        <span>{profile?.name || user?.email}</span>
-      <button
-        className="w-4 h-4 cursor-pointer text-sm"
-        onClick={() => setOpen(!open)}
-      >
-        <img src={Expand_down_light} alt="expand down icon" className="w-4 h-4" />
-      </button>
+        <button
+          className="cursor-pointer flex items-center gap-2"
+          onClick={() => setOpen(!open)}
+        >
+          <img
+            src={profile?.profile_pic || avatar}
+            alt={profile?.name}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <span>{profile?.name || user?.email}</span>
+          <img
+            src={Expand_down_light}
+            alt="expand down icon"
+            className="w-4 h-4"
+          />
+        </button>
       </div>
 
       {/* dropdown menu */}
@@ -122,11 +128,10 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
           <button
             className="w-full text-left px-4 py-2 flex gap-3"
             onClick={() => {
-              if(isAdmin === true){
-              handleNavigate("/admin/profile")
-              }
-              else{
-              handleNavigate("/profile?tab=profile")
+              if (isAdmin === true) {
+                handleNavigate("/admin/profile");
+              } else {
+                handleNavigate("/profile?tab=profile");
               }
             }}
           >
@@ -137,10 +142,12 @@ function UserMenu({ mobile = false, onClose }: UserMenuProps) {
           <button
             className="w-full text-left px-4 py-2 flex gap-3"
             onClick={() => {
-              if(isAdmin === true){
-              handleNavigate("/admin/reset-password")
+              if (isAdmin === true) {
+                handleNavigate("/admin/reset-password");
+              } else {
+                handleNavigate("/profile?tab=password");
               }
-              else{handleNavigate("/profile?tab=password")}}}
+            }}
           >
             <img src={resetPasswordIcon} alt="reset password icon" />
             Reset password

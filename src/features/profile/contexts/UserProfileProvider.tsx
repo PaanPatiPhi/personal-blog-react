@@ -66,9 +66,8 @@ export const UserProfileProvider = ({
     if (!user) return;
 
     try {
-      console.log("Updating profile with:", formValues);
       
-      const updateData: Record<string, any> = {
+      const updateData: Record<string, string | File | undefined> = {
         name: formValues.name,
         username: formValues.username,
         bio: formValues.bio,
@@ -81,15 +80,11 @@ export const UserProfileProvider = ({
         updateData.profile_pic = URL.createObjectURL(formValues.imageFile);
       }
 
-      console.log("Update data:", updateData);
-
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("users")
         .update(updateData)
         .eq("id", user.id)
         .select();
-
-      console.log("Update response:", { data, error });
 
       if (error) throw error;
 

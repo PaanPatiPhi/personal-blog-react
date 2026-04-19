@@ -14,10 +14,6 @@ function ArticleSearchSection({
 }: ArticleSearchSectionProps) {
   const { categories, loading, error } = useCategories();
 
-  // Debug: ดูว่า categories โหลดมาอย่างไร
-  console.log("Categories loaded:", categories);
-  console.log("Current category:", category);
-
   // Create category options with Highlight first, then dynamic categories
   const categoryOptions = [
     { label: "Highlight", value: "Highlight" },
@@ -26,9 +22,6 @@ function ArticleSearchSection({
       value: cat.displayName, // Use clean name for API calls too
     })),
   ];
-
-  // Debug: ดูว่า options สร้างได้อย่างไร
-  console.log("Category options:", categoryOptions);
 
   return (
     <article>

@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/lib/api";
 import { useEffect, useRef, useState } from "react";
 
 type Blog = {
@@ -53,8 +53,8 @@ function useGetPost({ category, keyword }: UseGetPostParams) {
     currentController.current = controller;
 
     try {
-      const res = await axios.get(
-        "https://blog-api-six-chi.vercel.app/posts",
+      const res = await api.get(
+        "/posts",
         {
           params: {
             page,
@@ -69,9 +69,6 @@ function useGetPost({ category, keyword }: UseGetPostParams) {
           signal: controller.signal,
         }
       );
-
-      // DEBUG: ดู data จริงจาก API
-      console.log("posts:", res.data.posts);
 
       const newPosts: Blog[] = res.data.posts ?? [];
 

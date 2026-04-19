@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 interface Blog {
   id: number;
@@ -36,7 +36,7 @@ function useSearchSuggestions({ query }: UseSearchSuggestionsProps) {
 
       try {
         // For search suggestions, get all published posts (no category filter)
-        const res = await axios.get("https://blog-api-six-chi.vercel.app/posts/published", {
+        const res = await api.get("/posts/published", {
           params: {
             page: 1,
             limit: 20, // Get more for better suggestions

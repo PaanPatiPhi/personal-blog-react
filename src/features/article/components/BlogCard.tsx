@@ -12,6 +12,7 @@ interface BlogCardProps {
   author: string;
   authorImage: string;
   date: string;
+  categoryName?: string;
 }
 
 
@@ -19,11 +20,12 @@ function BlogCard({
   id,
   image, 
   category_id, 
-  title, 
-  description, 
-  author, 
-  authorImage, 
-  date 
+  title,
+  description,
+  author,
+  authorImage,
+  date,
+  categoryName
 }: BlogCardProps) {
   const navigate = useNavigate();
   const { profile } = useProfile();
@@ -37,11 +39,8 @@ function BlogCard({
     });
   };
 
-  const CATEGORY_MAP: Record<number, string> = {
-  1: "Cat",
-  2: "Inspiration",
-  3: "General"
-};
+  // Get category name from props, fallback to "Unknown"
+  const finalCategoryName = categoryName || "Unknown";
 
   // Use profile data if available, otherwise fall back to props
   const displayName = profile?.name || author;
@@ -71,7 +70,7 @@ function BlogCard({
       <div className="flex flex-col gap-3">
         {/* หมวดหมู่ (Badge) */}
         <span className="w-fit px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-medium rounded-md">
-          {CATEGORY_MAP[category_id]}
+          {finalCategoryName}
         </span>
 
         {/* หัวข้อ */}

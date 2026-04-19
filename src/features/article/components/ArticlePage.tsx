@@ -22,16 +22,12 @@ function ArticlesPage() {
   // ========== STATE MANAGEMENT ==========
   const [category, setCategory] = useState("Highlight"); // category ปัจจุบันที่เลือก
 
-  // Debug: ดูว่า state เปลี่ยนอย่างไร
-  console.log("ArticlePage state:", { category });
-
   // ========== EVENT HANDLERS ==========
   /**
    * เรียกเมื่อ user เปลี่ยน category tab
    * @param newCategory - category ใหม่ที่เลือก
    */
   const handleCategoryChange = (newCategory: string) => {
-    console.log("Category changed from", category, "to", newCategory);
     setCategory(newCategory);
   };
 

@@ -12,15 +12,17 @@ export async function createNotification(data: {
     // Get current user for sender_id
     const { data: { session } } = await supabase.auth.getSession();
     
-    // TODO: Get actual post owner ID from the post
-    // For now, send to current user (you should fetch post owner from database)
-    const recipientId = session?.user?.id; // This should be post owner's ID
+    // Get actual post owner ID from post
+    const response = await api.get(`/posts/${data.post_id}`);
+    const post = response.data;
+    const recipientId = post.user_id || post.author_id; // Use post owner's ID
     
     const notificationData: any = {
       recipient_id: recipientId,
       sender_id: session?.user?.id,
       type: data.type,
       message: data.message,
+      article_id: parseInt(data.post_id!), // Add article_id for navigation
     };
     
     // Add appropriate ID based on type

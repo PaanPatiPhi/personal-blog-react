@@ -96,11 +96,13 @@ export default function NotificationItem({
     userName,
     avatarUrl,
     action,
-    articleTitle,
+    article_title,
     message,
     timeAgo,
     created_at,
     comment_content,
+    article_id,
+    related_id,
   } = notification;
   
   const navigate = useNavigate();
@@ -131,7 +133,7 @@ export default function NotificationItem({
           </span>{" "}
           {action === "commented" ? "commented on your article" : "liked your article"}{" "}
           <span className="text-neutral-700 font-medium">
-            {articleTitle}
+            {article_title}
           </span>
         </p>
 
@@ -148,8 +150,8 @@ export default function NotificationItem({
 
       {/* View */}
       <button
-        onClick={() => navigate(`/posts/${id}`)}
-        className="self-start text-sm text-neutral-900 underline"
+        onClick={() => navigate(`/posts/${article_id || related_id || id}`)}
+        className="self-start text-sm text-neutral-900 underline cursor-pointer"
       >
         View
       </button>

@@ -12,8 +12,6 @@ export function useNotifications() {
       setLoading(true);
       const response = await api.get('/notifications');
       const notificationsData = response.data.data || [];
-      console.log("Notifications API response:", response.data);
-      console.log("Notifications data:", notificationsData);
       
       // Ensure notificationsData is an array
       const notificationsArray = Array.isArray(notificationsData) ? notificationsData : [];

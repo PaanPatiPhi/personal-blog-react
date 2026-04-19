@@ -13,7 +13,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 // จำนวนบทความต่อหน้า (pagination)
 const LIMIT = 6;
@@ -45,9 +45,6 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
   const [isLoading, setIsLoading] = useState(false);          // กำลังโหลดข้อมูลอยู่หรือไม่
   const [isError, setIsError] = useState(false);              // เกิดข้อผิดพลาดหรือไม่
 
-  // Debug: ดูว่า state เปลี่ยนอย่างไร
-  console.log("useGetPublishedPost state changed:", { blogDataLength: blogData.length, page, isLoading });
-
   // ========== REFS FOR STATE MANAGEMENT ==========
   const isFetching = useRef(false);                          // ป้องกันการเรียกซ้ำระหว่าง fetch
   const currentController = useRef<AbortController | null>(null); // สำหรับ cancel request
@@ -55,7 +52,6 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
 
   // ========== API CALL FUNCTION ==========
   const fetchPosts = async () => {
-    console.log("🔥 fetchPosts called with:", { page, category, keyword });
     setIsLoading(true);
     setIsError(false);
 
@@ -80,26 +76,14 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
         search: keyword || "",
       };
 
-      // Debug: ดูว่าส่ง params อะไรไป API
-      console.log("API params:", params);
-
       // ========== API CALL ==========
-      const res = await axios.get(
-        "https://blog-api-six-chi.vercel.app/posts/published",
+      const res = await api.get(
+        "/posts/published",
         { params }
       );
 
-      // ========== DEBUG LOGS ==========
-      console.log("API response:", res.data);
-      console.log("Posts array:", res.data.posts);
-      console.log("Total posts:", res.data.totalPosts);
-
       // ========== PROCESS RESPONSE ==========
       const newPosts: Blog[] = res.data.posts ?? [];
-      
-      // Debug: ดูว่าได้ posts อะไรบ้าง
-      console.log("New posts from API:", newPosts);
-      console.log("New posts length:", newPosts.length);
 
       // ========== STATE UPDATE ==========
       // ป้องกัน duplicate articles (กรณี infinite scroll)
@@ -107,12 +91,6 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
         const existingIds = new Set(prev.map((p) => p.id));
         const unique = newPosts.filter((p) => !existingIds.has(p.id));
         const result = [...prev, ...unique];
-        
-        // Debug: ดูว่า filtering ทำงานอย่างไร
-        console.log("Prev posts length:", prev.length);
-        console.log("New posts length:", newPosts.length);
-        console.log("Unique posts length:", unique.length);
-        console.log("Result posts length:", result.length);
         
         return result;
       });
@@ -164,18 +142,13 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
    * 2. fetch data ตาม page ปัจจุบัน
    */
   useEffect(() => {
-    console.log("🎯 useEffect triggered with:", { page, category, keyword });
-    
     // ตรวจสอบว่ามีการเปลี่ยนแปลง params หรือไม่
     const paramsChanged =
       prevParams.current.category !== category ||
       prevParams.current.keyword !== keyword;
 
-    console.log("🔍 paramsChanged:", paramsChanged, "prevParams:", prevParams.current);
-
     if (paramsChanged) {
       // ========== RESET STATE (เมื่อ params เปลี่ยน) ==========
-      console.log("🔄 Resetting state due to params change");
       
       // ยกเลิก request เก่า
       currentController.current?.abort();
@@ -189,17 +162,14 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
 
       // ถ้ายังไม่ใช่ page 1 → set แล้วรอ effect ยิงใหม่
       if (page !== 1) {
-        console.log("📄 Setting page to 1 and waiting for next effect");
         setPage(1);
         return;
       }
 
       // ถ้า page = 1 อยู่แล้ว → fetch ต่อได้เลย
-      console.log("📄 Already on page 1, fetching immediately");
       fetchPosts();
     } else {
       // ========== NORMAL FETCH (เมื่อ page เปลี่ยน) ==========
-      console.log("📄 Normal fetch for page change");
       fetchPosts();
     }
 

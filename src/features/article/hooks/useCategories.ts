@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 type Category = {
   id: number;
@@ -15,7 +15,7 @@ function useCategories() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://blog-api-six-chi.vercel.app/categories");
+        const response = await api.get("/categories");
         // Clean category names by removing newlines and extra whitespace
         const cleanedCategories = response.data.map((cat: { id: number; name: string }) => ({
           ...cat,

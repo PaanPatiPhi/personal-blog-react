@@ -7,13 +7,11 @@ type ArticleSectionProps = {
 
 function ArticleSection({ category }: ArticleSectionProps) {
   const { blogData, isLoading, isError, handleLoadMore, hasMore } = useGetPublishedPost({
-    category,
+    category: category === "Highlight" ? "" : category,
     keyword: "", // ไม่มี search filtering
   });
 
   // debug logs (เอาออกได้ถ้าต้องการ)
-  console.log("ArticleSection category:", category);
-  console.log("ArticleSection blogData length:", blogData?.length);
 
   if (isLoading && (!blogData || blogData.length === 0)) {
     return (
@@ -32,9 +30,6 @@ function ArticleSection({ category }: ArticleSectionProps) {
   // API ทำการ filter ให้แล้ว ไม่ต้อง filter ซ้ำ
   // ถ้า category เป็น "Highlight" จะแสดงทั้งหมด
   const displayBlogs = blogData;
-  console.log("blogData", blogData);
-  console.log("category", category);
-  console.log("displayBlogs", displayBlogs);
 
   return (
     <article>
@@ -47,10 +42,11 @@ function ArticleSection({ category }: ArticleSectionProps) {
               title={blog.title}
               description={blog.description}
               image={blog.image}
-              category_id={0}
+              category_id={(blog as any).category_id}
               author={blog.category_name || "Unknown"}
               authorImage={blog.image}
               date={blog.date}
+              categoryName={blog.category_name}
             />
           ))
         ) : (

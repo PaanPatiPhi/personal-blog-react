@@ -52,7 +52,7 @@
 // }
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 export type Post = {
   id: number;
@@ -76,8 +76,8 @@ export function usePost(id?: string) {
     setLoading(true);
     setError(false);
 
-    axios
-      .get(`https://blog-api-six-chi.vercel.app/posts/${id}`)
+    api
+      .get(`/posts/${id}`)
       .then((res) => {
         if (!cancelled) {
           const data = res.data.posts ?? res.data; // กัน API shape

@@ -31,8 +31,6 @@ interface CategoryTabsProps {
 }
 
 function CategoryTabs({ options, activeValue, onChange, className = "" }: CategoryTabsProps) {
-  // Debug: ดูว่าได้รับ props อะไร
-  console.log("CategoryTabs props:", { options, activeValue, onChange, className });
   
   return (
     <div className={`hidden md:flex items-center ${className}`}>

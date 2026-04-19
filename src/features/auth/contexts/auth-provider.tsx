@@ -306,11 +306,6 @@ useEffect(() => {
   
   // ใช้ค่าจาก API ถ้ามี ไม่ใช้ค่าจาก metadata
   const finalIsAdmin = isAdminFromAPI !== null ? isAdminFromAPI : isAdmin;
-  
-  console.log("User profile:", user);
-  console.log("User metadata:", user?.user_metadata);
-  console.log("Is admin:", finalIsAdmin);
-  console.log("Role check:", user?.user_metadata?.role);
   /* ======================
      Provider Value
      ====================== */

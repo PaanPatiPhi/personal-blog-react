@@ -2,7 +2,6 @@ import { ProfileContext } from "./profile-context.tsx";
 import { usePublicAdminProfile } from "@/features/admin-page/hook/usePublicAdminProfile";
 import type {
   ProfileData,
-  UpdateProfilePayload,
 } from "./profile-context.tsx";
 
 /*
@@ -27,9 +26,7 @@ export const PublicProfileProvider = ({
     bio: adminProfile.bio,
   } : null;
 
-  const updateProfile = async (
-    _formValues: UpdateProfilePayload
-  ) => {
+  const updateProfile = async () => {
     // Public profile provider doesn't support updates
     throw new Error("Cannot update profile in public mode");
   };

@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { api } from "@/lib/api";
 
 interface Post {
   title: string;
@@ -77,13 +77,12 @@ function CreatePostComponent() {
     formData.append("imageFile", imageFile.file);
 
     try {
-      await axios.post(
-        "https://blog-api-six-chi.vercel.app/api/posts",
+      await api.post(
+        "/posts",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

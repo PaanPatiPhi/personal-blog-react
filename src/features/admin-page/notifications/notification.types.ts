@@ -6,7 +6,7 @@ export interface Notification {
   avatarUrl?: string; // ✅ เพิ่มรูป user (optional)
   profile_pic?: string; // ✅ รูปจาก backend (optional)
   action: NotificationAction;
-  articleTitle: string; // ✅ ชื่อบทความ
+  article_title: string; // ✅ ชื่อบทความ
   message?: string;
   timeAgo?: string; // Fallback for backward compatibility
   created_at: string; // ✅ เพิ่ม timestamp สำหรับคำนวณเวลา (ตรงกับ backend)

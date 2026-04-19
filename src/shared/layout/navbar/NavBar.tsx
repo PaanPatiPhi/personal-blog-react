@@ -9,7 +9,6 @@ import NotificationDropdown from "@/features/admin-page/components/NotificationD
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, isAdmin } = useAuth();
-console.log("NavBar user:", isAuthenticated);
 
   return (
     <nav className="w-full border-b border-brown-200 bg-white sticky top-0 z-50">

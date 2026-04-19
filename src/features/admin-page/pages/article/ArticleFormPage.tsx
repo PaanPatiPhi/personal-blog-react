@@ -29,7 +29,7 @@ export default function ArticleFormPage() {
   const { data: article, isLoading: isLoadingArticle } = useGetPostById(isEditMode ? Number(id) : undefined);
   const { createPost } = useCreatePost();
   const { updatePost } = useUpdatePost();
-  const { profile } = useProfile();
+  const profile = useProfile();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>({
@@ -236,7 +236,7 @@ export default function ArticleFormPage() {
 
         <input
           disabled
-          value={profile?.name || "Thompson P."}
+          value={(profile as any)?.name || "Thompson P."}
           className="w-full rounded border bg-gray-100 px-4 py-2 mt-3 text-sm text-(--color-brown-400)"
         />
       </div>

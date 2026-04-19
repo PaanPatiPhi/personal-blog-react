@@ -10,13 +10,14 @@ export default function NotificationPage() {
     userName: notif.userName || "Anonymous",
     avatarUrl: notif.avatarUrl || notif.profile_pic || undefined,
     action: notif.action || 'commented' as const,
-    articleTitle: notif.articleTitle || "Unknown Article",
+    article_title: notif.article_title || "Unknown Article",
     message: notif.message,
     timeAgo: notif.timeAgo,
     created_at: notif.created_at,
     is_read: notif.is_read,
+    article_id: notif.article_id,
   })) : [];
-
+  console.log("noti",mappedNotifications)
   if (loading) {
     return (
       <div className="px-15">

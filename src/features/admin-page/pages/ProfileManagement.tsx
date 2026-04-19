@@ -48,7 +48,6 @@ export default function ProfileManagement() {
     }
   }, [profile, loading]);
 
-  console.log("Profile from Supabase:", profile);
   /**
    * handle เปลี่ยนค่าฟอร์มแบบ generic
    * ลดการเขียน onChange ซ้ำ ๆ
@@ -116,11 +115,17 @@ if(loading) return <LoadingPage />
 
       {/* ===== Avatar ===== */}
       <div className="flex items-center gap-6">
-        <img
-          src={form.profile_pic}
-          alt="profile"
-          className="h-24 w-24 rounded-full object-cover"
-        />
+        {form.profile_pic ? (
+          <img
+            src={form.profile_pic}
+            alt="profile"
+            className="h-24 w-24 rounded-full object-cover"
+          />
+        ) : (
+          <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500">No Image</span>
+          </div>
+        )}
 
         <label className="cursor-pointer rounded-full border px-4 py-2 text-sm">
           Upload profile picture

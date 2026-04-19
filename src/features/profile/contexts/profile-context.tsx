@@ -41,7 +41,13 @@ export const ProfileContext =
 export const useProfile = (): ProfileContextType => {
   const context = useContext(ProfileContext);
   if (context === undefined) {
-    throw new Error("useProfile must be used within a ProfileProvider");
+    // Return default values instead of throwing error
+    return {
+      profile: null,
+      updateProfile: async () => {},
+      refetch: async () => {},
+      loading: false
+    };
   }
   return context;
 };

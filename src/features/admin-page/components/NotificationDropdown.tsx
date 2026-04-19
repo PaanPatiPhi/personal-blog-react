@@ -8,7 +8,6 @@ export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { notifications, unreadCount, markAsRead} = useNotifications();
-  console.log(notifications)
 
   const handleNotificationClick = async (notification: Notification) => {
     // Mark as read
@@ -88,9 +87,9 @@ export default function NotificationDropdown() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-900">{notification.message}</p>
-                        {notification.articleTitle && (
+                        {notification.article_title && (
                           <p className="text-xs text-gray-500 truncate">
-                            Post: {notification.articleTitle}
+                            Post: {notification.article_title}
                           </p>
                         )}
                         <p className="text-xs text-gray-400 mt-1">
