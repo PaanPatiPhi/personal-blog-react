@@ -14,21 +14,33 @@ function Footer() {
           <h1 className="text-(length:--text-size-headline-1) font-medium">
             Get in touch
           </h1>
-          <button>
-          <Linkedin />
-          </button>
-          <button>
-          <Github />
-          </button>
-          <button>
-          <Mail />
-          </button>
-          </div>
+          <a 
+            href="https://www.linkedin.com/in/patiparn-thamboonrak" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            <Linkedin />
+          </a>
+          <a 
+            href="https://github.com/PaanPatiPhi" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            <Github />
+          </a>
+          <a 
+            href="mailto:patiparn.phi@gmail.com" 
+            className="hover:opacity-80 transition-opacity"
+          >
+            <Mail />
+          </a>
+        </div>
         <button>
           <Link to="/" className="text-(length:--text-size-headline-1) font-medium">
-          Homepage
-        </Link>
-
+            Homepage
+          </Link>
         </button>
       </div>
     </footer>
