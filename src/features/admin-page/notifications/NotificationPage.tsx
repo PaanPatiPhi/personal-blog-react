@@ -17,7 +17,7 @@ export default function NotificationPage() {
     is_read: notif.is_read,
     article_id: notif.article_id,
   })) : [];
-  console.log("noti",mappedNotifications)
+
   if (loading) {
     return (
       <div className="px-15">

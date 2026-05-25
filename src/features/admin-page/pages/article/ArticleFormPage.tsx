@@ -116,7 +116,7 @@ export default function ArticleFormPage() {
 
       navigate("/admin/articles");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }

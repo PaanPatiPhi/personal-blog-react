@@ -187,7 +187,6 @@ function useGetPublishedPost({ category, keyword }: UseGetPostParams) {
   const handleLoadMore = () => {
     if (isLoading || !hasMore) return;
 
-    console.log("🔽 Loading more posts...");
     setPage((prev) => prev + 1);
   };
 

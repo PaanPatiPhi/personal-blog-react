@@ -40,7 +40,7 @@ const testGet = async () => {
         
     }
     catch (error: unknown){
-        console.log(error)
+        console.error(error)
         const err = error as any;
         setError({
             status: err?.response?.status,

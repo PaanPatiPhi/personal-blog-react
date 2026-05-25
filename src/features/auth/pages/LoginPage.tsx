@@ -40,7 +40,7 @@ function LoginPage() {
     setError("");
     try {
       const res = await userLogin(data);
-      console.log("Login response:", res);
+
       
       // ✅ Success toast สำหรับ login สำเร็จ
       setToastTitle("Login Successful");

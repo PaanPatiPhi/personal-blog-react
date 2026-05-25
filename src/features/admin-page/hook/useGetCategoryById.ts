@@ -15,7 +15,7 @@ export type CategoryDetail = {
  * ใช้กับหน้า Article Detail หรือ Admin Edit
  */
 function useGetCategoryById(categoryId?: number) {
-  console.log("hook run");
+
   // state เก็บข้อมูลบทความ (ได้ทีละ 1 ชิ้น)
   const [category, setCategory] = useState<CategoryDetail | null>(null);
 
@@ -29,8 +29,6 @@ function useGetCategoryById(categoryId?: number) {
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    console.log("hook run2");
-    console.log(categoryId);
     if (!categoryId) return;
 
     controllerRef.current?.abort();
@@ -46,7 +44,6 @@ function useGetCategoryById(categoryId?: number) {
         signal: controller.signal,
       })
       .then((res) => {
-        console.log(res.data[0])
         setCategory(res.data[0]);
       })
       .catch((err) => {

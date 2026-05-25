@@ -30,15 +30,14 @@ function PostActions({
   onShareTwitter,
 }: PostActionsProps) {
   const handleLikeClick = () => {
-    console.log("Like clicked - isLoggedIn:", isLoggedIn);
+
     
     if (!isLoggedIn) {
-      console.log("User not logged in, showing login modal");
+
       onRequireLogin?.();
       return;
     }
-    
-    console.log("User logged in, toggling like");
+
     onLike();
   };
   return (

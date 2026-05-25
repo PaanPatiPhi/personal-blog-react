@@ -51,13 +51,10 @@ export function usePostLikes(postId?: string) {
       const requestData = {
         user_id: user.id
       };
-      
-      console.log("Toggling like with data:", requestData);
-      console.log("POST URL:", `/likes/posts/${postId}/likes`);
+
       
       const response = await api.post(`/likes/posts/${postId}/likes`, requestData);
-      
-      console.log("Like toggle response:", response.data);
+ 
       
       // Update state based on response
       if (response.data.liked) {

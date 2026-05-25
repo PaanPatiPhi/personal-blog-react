@@ -19,13 +19,11 @@ function useCreatePost() {
     setIsLoadingPost(true);
     setIsErrorPost(false);
 
-    console.log("payload sent:", payload)
-
     const res = await api.post("/posts", payload);
 
     return res.data;
   } catch (err: unknown) {
-  console.log(err);
+  console.error(err);
   setIsErrorPost(true);
   throw err;
   } finally {

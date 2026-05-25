@@ -48,7 +48,6 @@ export function useAddComment(toast?: CommentOptions) {
       setLoading(true);
       setError(null);
 
-      console.log("Comment data received:", commentData);
 
       // Use 'comment_text' column based on the actual table schema
       const insertData: Record<string, unknown> = {
@@ -57,7 +56,6 @@ export function useAddComment(toast?: CommentOptions) {
         comment_text: commentData.content.trim(), // Use 'comment_text' column
       };
 
-      console.log("Inserting comment data:", insertData);
 
       const { data, error } = await supabase
         .from("comments")
@@ -67,7 +65,6 @@ export function useAddComment(toast?: CommentOptions) {
 
       if (error) throw error;
 
-      console.log("Comment added successfully:", data);
       
       // Send notification to admin
       await notifyNewComment(commentData.post_id, "", user.user_metadata?.name || user.email || "Anonymous", data.id);

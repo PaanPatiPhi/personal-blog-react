@@ -178,7 +178,7 @@ export default function ArticleManagement() {
                 try {
                   handleDelete(article.id);
                 } catch (error) {
-                  console.log(error);
+                  console.error(error);
                 } finally {
                   setOpen(false);
                 }

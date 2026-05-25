@@ -22,20 +22,14 @@ function useUpdatePost() {
 
     try {
 
-      console.log('Request Headers:', {
-        'Content-Type': 'application/json',
-        'Authorization': api.defaults.headers.common.Authorization || 'No Authorization header'
-      });
-      console.log('Full Headers Object:', api.defaults.headers);
-      console.log('Common Headers:', api.defaults.headers.common);
-      console.log('Request Payload:', payload);
+
 
       const res = await api.put(`/posts/${postId}`, payload);
 
       return res.data;
 
     } catch (err) {
-      console.log('Update Post Error:', (err as any)?.response?.data || (err as any)?.message || err)
+      console.error('Update Post Error:', (err as any)?.response?.data || (err as any)?.message || err)
 
       setIsError(true);
       throw err;

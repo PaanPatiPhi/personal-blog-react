@@ -77,8 +77,7 @@ function SignupForm({ onSuccess }: SignupFormProps) {
 
     setLoading(true);
     try {
-      // mock API
-      console.log("signup payload:", form);
+
       await new Promise((res) => setTimeout(res, 800));
 
       const signUpUser = {

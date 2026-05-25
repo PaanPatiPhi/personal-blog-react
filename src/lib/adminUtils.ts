@@ -22,7 +22,6 @@ export async function setUserAsAdmin(email: string): Promise<void> {
       role: 'admin'
     });
 
-    console.log(`User ${email} has been set as admin`);
   } catch (error) {
     console.error('Error setting user as admin:', error);
     throw error;

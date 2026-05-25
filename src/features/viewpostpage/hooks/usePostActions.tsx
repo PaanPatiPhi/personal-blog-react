@@ -19,8 +19,7 @@ export function usePostActions({
       onRequireLogin();
       return;
     }
-    
-    console.log("LIKE POST");
+
     
     // Send notification to admin
     if (user) {

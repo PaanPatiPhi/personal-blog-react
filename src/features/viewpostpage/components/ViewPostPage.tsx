@@ -21,7 +21,6 @@ function ViewPostPage() {
   const [showCopyToast, setShowCopyToast] = useState(false);
 
   const { post, loading, error } = usePost(id);
-  console.log(post)
   const { comments, refreshComments } = useComments(id);
   const { likes, isLiked, toggleLike, loading: likeLoading } = usePostLikes(id);
 

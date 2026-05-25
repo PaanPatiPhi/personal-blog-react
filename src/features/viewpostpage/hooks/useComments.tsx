@@ -62,9 +62,7 @@ export function useComments(postId?: string) {
         setError(null);
 
         const comment = await api.get(`/comments/post/${postId}`);
-        console.log(comment)
 
-        console.log("Fetched comments:", comment.data);
         
         // Map API response to match Comment type
         const commentsWithUsers = comment.data.comments.map((c: ApiComment) => ({
@@ -75,7 +73,7 @@ export function useComments(postId?: string) {
             profile_pic: c.profile_pic
           }
         }));
-        
+
         setComments(commentsWithUsers || []);
       } catch (err) {
         console.error("Error fetching comments:", err);
@@ -89,9 +87,7 @@ export function useComments(postId?: string) {
   }, [postId, refreshKey]);
 
   const addComment = (newComment: SupabaseComment) => {
-    console.log("Adding new comment:", newComment);
-    console.log("newComment.username:", newComment.username);
-    console.log("newComment.profile_pic:", newComment.profile_pic);
+
     
     // Transform the new comment to match the expected format with users object
     const transformedComment: Comment = {
@@ -102,8 +98,7 @@ export function useComments(postId?: string) {
         profile_pic: newComment.user?.profile_pic || newComment.profile_pic || null
       }
     };
-    
-    console.log("Transformed comment:", transformedComment);
+
     setComments((prev) => [transformedComment, ...prev]);
   };
 

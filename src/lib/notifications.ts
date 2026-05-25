@@ -31,18 +31,17 @@ export async function createNotification(data: {
     } else if (data.type === 'like' && data.post_id) {
       notificationData.related_id = data.post_id;
     }
-    
-    console.log("Sending notification to API:", notificationData);
+
     
     await api.post('/notifications', notificationData);
-    console.log("Notification created successfully");
+
   } catch (error) {
     console.error('Error creating notification:', error);
   }
 }
 
 export async function notifyNewComment(postId: string, _postTitle: string, userName: string, commentId?: number) {
-  console.log("Creating notification for comment:", { postId, userName, commentId });
+
   await createNotification({
     type: 'comment',
     message: `${userName} commented on your post`,
@@ -52,7 +51,7 @@ export async function notifyNewComment(postId: string, _postTitle: string, userN
 }
 
 export async function notifyNewLike(postId: string, _postTitle: string, userName: string) {
-  console.log("Creating notification for like:", { postId, userName });
+
   await createNotification({
     type: 'like',
     message: `${userName} liked your post`,

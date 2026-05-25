@@ -42,7 +42,6 @@ export default function UpdateCategoryPage() {
       setToastDescription("Category has been successfully updated.");
       setToastType("success");
       setShowToast(true);
-      console.log("hit")
       // navigate("/admin/categories");
       setTimeout(() => setShowToast(false), 2000);
     } catch (error) {

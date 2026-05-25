@@ -80,7 +80,7 @@ useEffect(() => {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setState({
         loading: false,
         error: null,
@@ -155,7 +155,7 @@ useEffect(() => {
         throw new Error("Invalid email or password");
       }
     } catch (error: unknown) {
-      console.log(error);
+      console.error(error);
 
       setState({
         loading: false,
@@ -237,7 +237,7 @@ useEffect(() => {
       
       <SignupSuccess />
     } catch (error) {
-      console.log(error);
+      console.error(error);
       
       // ❌ Error toast สำหรับ registration failed
       toast.error("Registration failed. Please try again.");
@@ -256,7 +256,7 @@ useEffect(() => {
       // ✅ Success toast สำหรับ logout
       toast.success("Logged out successfully!");
     } catch (error) {
-      console.log('Logout error:', error);
+      console.error('Logout error:', error);
     }
 
     setState({
@@ -293,7 +293,7 @@ useEffect(() => {
           setIsAdminFromAPI(userRole === 'admin');
         } catch (error) {
           setIsAdminFromAPI(false);
-          console.log(error)
+          console.error(error)
         }
       } else if (user?.user_metadata?.role) {
         // มี role ใน metadata ใช้เลย
