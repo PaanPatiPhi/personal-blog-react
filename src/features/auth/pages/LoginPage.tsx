@@ -39,7 +39,7 @@ function LoginPage() {
 
     setError("");
     try {
-      const res = await userLogin(data);
+      await userLogin(data);
 
       
       // ✅ Success toast สำหรับ login สำเร็จ
